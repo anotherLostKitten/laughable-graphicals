@@ -1,3 +1,5 @@
+//theodore peters 260919785
+
 #include "DAGNode.h"
 #include "MatrixStack.h"
 #include "Program.h"
@@ -53,7 +55,6 @@ void DAGNode::draw(const std::shared_ptr<Program> prog, const std::shared_ptr<Pr
 	child->draw(prog, prog2, MV, vao, fileid, teapot, sphere, cube, frameData, name.compare("Head"));
   }
   prog2->bind();
-  MV->scale(4.);
   glUniformMatrix4fv(prog2->getUniform("MV"), 1, GL_FALSE, &MV->topMatrix()[0][0]);
   glBindVertexArray(vao);
   glDrawArrays(GL_LINES, 0, 6);
@@ -62,12 +63,12 @@ void DAGNode::draw(const std::shared_ptr<Program> prog, const std::shared_ptr<Pr
   prog->bind();
 
   if(isHead) {
-	MV->scale(0.75);
+	MV->scale(3.);
 	glUniformMatrix4fv(prog->getUniform("MV"), 1, GL_FALSE, &MV->topMatrix()[0][0]);
 	sphere->draw(prog);
-  } else {
+  } else { // funny head
 	MV->rotate(-3.1415926535 / 2., 0., 1., 0.);
-	MV->scale(6.);
+	MV->scale(24.);
 	glUniformMatrix4fv(prog->getUniform("MV"), 1, GL_FALSE, &MV->topMatrix()[0][0]);
 	teapot->draw(prog);
 	MV->scale(0.125);

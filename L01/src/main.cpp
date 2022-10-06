@@ -40,11 +40,11 @@ GLuint posBufID; // position buffer for drawing a line loop
 GLuint aPosLocation = 0; // location set in col_vert.glsl (or can be queried)
 const GLuint NumVertices = 6;
 GLfloat vertices[NumVertices][3] = {{0, 0, 0},
-									{2, 0, 0},
+									{8, 0, 0},
 									{0, 0, 0},
-									{0, 2, 0},
+									{0, 8, 0},
 									{0, 0, 0},
-									{0, 0, 2}};
+									{0, 0, 8}};
 
 
 static void error_callback(int error, const char *description)
@@ -202,30 +202,6 @@ static void render()
 	prog->unbind();
 	
 	skeleton->root->draw(prog, prog2, MV, vao, FILE_ID, teapot, sphere, cube, skeleton->data + fc * skeleton->numChannels, true); // set this boolean to false for a truly cursed image
-	
-	/*
-	// Draw teapot.
-	prog->bind();
-	MV->pushMatrix();
-	MV->translate(0.0f, -0.4f, 0.0f);
-	
-	//double c = cos(t);
-	//double s = sin(t);
-	//double tmp[16] = { c, 0, s, 0,
-	//				   0, 1, 0, 0,
-	//				  -s, 0, c, 0,
-	//				   0, 0, 0, 1 };
-	//glm::mat4 M = glm::make_mat4(tmp);
-	//M = glm::transpose(M);
-	//MV->multMatrix(M);
-
-	MV->rotate( (float) t, 0, 1, 0 );
-	glUniformMatrix4fv(prog->getUniform("P"), 1, GL_FALSE, &P->topMatrix()[0][0]);
-	glUniformMatrix4fv(prog->getUniform("MV"), 1, GL_FALSE, &MV->topMatrix()[0][0]);
-	shape->draw(prog);
-	MV->popMatrix();
-	prog->unbind();
-	*/
 	
 	// Pop matrix stacks.
 	MV->popMatrix();

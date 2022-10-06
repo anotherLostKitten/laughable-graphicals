@@ -10,5 +10,5 @@ out vec3 fragColor;
 void main()
 {
 	gl_Position = P * MV * aPos;
-	fragColor = aPos.xyz;
+	fragColor = aPos.xyz * 1024.;
 }
