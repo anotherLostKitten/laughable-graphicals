@@ -11,8 +11,10 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "DAGNode.h"
 #include "GLSL.h"
 #include "MatrixStack.h"
+#include "Motion.h"
 #include "Program.h"
 #include "Shape.h"
 
@@ -27,12 +29,14 @@ shared_ptr<Shape> shape;
 GLuint vao;	
 GLuint posBufID; // position buffer for drawing a line loop
 GLuint aPosLocation = 0; // location set in col_vert.glsl (or can be queried)
-const GLuint NumVertices = 4;
-GLfloat vertices[NumVertices][3] = {
-					{ -1, -1,  0 },
-					{  1, -1,  0 },
-					{  1,  1,  0 },
-					{ -1,  1,  0 } };
+const GLuint NumVertices = 6;
+GLfloat vertices[NumVertices][3] = {{0, 0, 0},
+									{1, 0, 0},
+									{0, 0, 0},
+									{0, 1, 0},
+									{0, 0, 0},
+									{0, 0, 1}};
+
 
 static void error_callback(int error, const char *description)
 {
@@ -87,7 +91,6 @@ static void init()
 	prog2->init();
 	prog2->addUniform("P");
 	prog2->addUniform("MV");
-	prog2->addUniform("col");
 	prog2->addAttribute("aPos");
 	prog2->setVerbose(false);
 	
@@ -104,6 +107,13 @@ static void init()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices),	vertices, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(aPosLocation);
 	glVertexAttribPointer(aPosLocation, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+}
+
+static void drawAxes(const std::shared_ptr<Program> prog2, std::shared_ptr<MatrixStack> MV) {
+  	glUniformMatrix4fv(prog2->getUniform("MV"), 1, GL_FALSE, &MV->topMatrix()[0][0]);
+	glBindVertexArray(vao);
+	glDrawArrays(GL_LINES, 0, NumVertices);
 }
 
 static void render()
@@ -130,10 +140,19 @@ static void render()
 	// Apply camera transform.
 	MV->pushMatrix();
 	MV->translate(glm::vec3(0, 0, -3));
+
+	double t = glfwGetTime();
+	
+	// Draw axes.
+	prog2->bind();
+	glUniformMatrix4fv(prog2->getUniform("P"), 1, GL_FALSE, &P->topMatrix()[0][0]);
+	drawAxes(prog2, MV);
+
+
+	prog2->unbind();
 	
 	// Draw teapot.
 	prog->bind();
-	double t = glfwGetTime();
 	MV->pushMatrix();
 	MV->translate(0.0f, -0.4f, 0.0f);
 	
@@ -154,17 +173,6 @@ static void render()
 	MV->popMatrix();
 	prog->unbind();
 	
-	// Draw lines.
-	prog2->bind();
-	MV->pushMatrix();
-	glUniformMatrix4fv(prog2->getUniform("P"), 1, GL_FALSE, &P->topMatrix()[0][0]);
-	glUniformMatrix4fv(prog2->getUniform("MV"), 1, GL_FALSE, &MV->topMatrix()[0][0]);
-	glUniform3f(prog2->getUniform("col"), 1, 0, 0);
-	glBindVertexArray(vao);
-	glDrawArrays(GL_LINE_LOOP, 0, NumVertices);
-	MV->popMatrix();
-	prog2->unbind();
-
 	// Pop matrix stacks.
 	MV->popMatrix();
 	P->popMatrix();
@@ -195,7 +203,7 @@ int main(int argc, char **argv)
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     
 	// Create a windowed mode window and its OpenGL context.
-	window = glfwCreateWindow(640, 480, "YOUR NAME", NULL, NULL);
+	window = glfwCreateWindow(640, 480, "Theoodore Peters 260919785", NULL, NULL);
 	if(!window) {
 		glfwTerminate();
 		return -1;
