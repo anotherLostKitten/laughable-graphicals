@@ -5,7 +5,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.10)
 # cmake -DCMAKE_APPLE_SILICON_PROCESSOR=arm64 ..
 
 # Name of the project
-PROJECT(L00)
+PROJECT(L01)
 
 # Use glob to get the list of all source files.
 FILE(GLOB_RECURSE SOURCES "src/*.cpp")
