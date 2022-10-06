@@ -25,7 +25,13 @@ string RES_DIR = ""; // Where data files live
 shared_ptr<Program> prog;
 shared_ptr<Program> prog2; // for drawing with colours
 shared_ptr<Shape> shape;
+shared_ptr<Motion> skeleton;
 
+int refreshRate = 60;
+int fc = 0;
+int fi = 1;
+int fd = 1;
+bool play = true;
 GLuint vao;	
 GLuint posBufID; // position buffer for drawing a line loop
 GLuint aPosLocation = 0; // location set in col_vert.glsl (or can be queried)
@@ -45,9 +51,27 @@ static void error_callback(int error, const char *description)
 
 static void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods)
 {
-	if(key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-		glfwSetWindowShouldClose(window, GL_TRUE);
+  if(action == GLFW_PRESS) {
+	switch(key) {
+	case GLFW_KEY_ESCAPE:
+	  glfwSetWindowShouldClose(window, GL_TRUE);
+	  break;
+	case GLFW_KEY_SPACE:
+	  play = !play;
+	  break;
+	case GLFW_KEY_UP:
+	  fi++;
+	  break;
+	case GLFW_KEY_DOWN:
+	  if(fi>1)fi--;
+	  break;
+	case GLFW_KEY_ENTER:
+	  fd*=-1;
+	  break;
+	default:
+	  break;
 	}
+  }
 }
 
 static void init()
@@ -73,6 +97,10 @@ static void init()
 	shape = make_shared<Shape>();
 	shape->loadMesh(RES_DIR + "teapot.obj");
 	shape->init();
+
+	skeleton = make_shared<Motion>();
+	skeleton->loadBVH(RES_DIR + "0019_AdvanceBollywoodDance001.bvh");
+	cout << "skeleton number of datapoints: " << skeleton->numChannels << "\n";
 	
 	// Initialize the GLSL programs.
 	prog = make_shared<Program>();
@@ -107,12 +135,11 @@ static void init()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices),	vertices, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(aPosLocation);
 	glVertexAttribPointer(aPosLocation, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
+	
 }
 
 static void drawAxes(const std::shared_ptr<Program> prog2, std::shared_ptr<MatrixStack> MV) {
   	glUniformMatrix4fv(prog2->getUniform("MV"), 1, GL_FALSE, &MV->topMatrix()[0][0]);
-	glBindVertexArray(vao);
 	glDrawArrays(GL_LINES, 0, NumVertices);
 }
 
@@ -139,18 +166,22 @@ static void render()
 	P->multMatrix(glm::perspective((float)(45.0*M_PI/180.0), aspect, 0.01f, 100.0f));
 	// Apply camera transform.
 	MV->pushMatrix();
-	MV->translate(glm::vec3(0, 0, -3));
+	MV->translate(glm::vec3(0, -1, -3));
 
 	double t = glfwGetTime();
 	
 	// Draw axes.
 	prog2->bind();
+	MV->pushMatrix();
+	MV->scale(0.01);
 	glUniformMatrix4fv(prog2->getUniform("P"), 1, GL_FALSE, &P->topMatrix()[0][0]);
+	glBindVertexArray(vao);
 	drawAxes(prog2, MV);
 
-
+	skeleton->root->draw(prog2, MV, skeleton->data + fc * skeleton->numChannels);
+	MV->popMatrix();
 	prog2->unbind();
-	
+	/*
 	// Draw teapot.
 	prog->bind();
 	MV->pushMatrix();
@@ -172,12 +203,15 @@ static void render()
 	shape->draw(prog);
 	MV->popMatrix();
 	prog->unbind();
+	*/
 	
 	// Pop matrix stacks.
 	MV->popMatrix();
 	P->popMatrix();
 	
 	GLSL::checkError(GET_FILE_LINE);
+
+	fc = play? (fc + fd*fi + skeleton->numFrames) % skeleton->numFrames : fc;
 }
 
 int main(int argc, char **argv)
@@ -220,7 +254,10 @@ int main(int argc, char **argv)
 	cout << "OpenGL version: " << glGetString(GL_VERSION) << endl;
 	cout << "GLSL version: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << endl;
 	// Set vsync.
-	glfwSwapInterval(1);
+	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+	refreshRate = mode->refreshRate;
+	glfwSwapInterval((int)((float)(refreshRate) / 60.0));
 	// Set keyboard callback.
 	glfwSetKeyCallback(window, key_callback);
 	// Initialize scene.
