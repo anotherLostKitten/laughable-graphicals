@@ -7,6 +7,9 @@
 #include <memory>
 #include "GLSL.h"
 
+#define GLEW_STATIC
+#include <GL/glew.h>
+
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -14,6 +17,7 @@
 
 class Program;
 class MatrixStack;
+class Shape;
 
 /**
  * This class manages nodes for a character skeleton specified by a bvh file.
@@ -26,7 +30,7 @@ public:
 	virtual ~DAGNode();	
 	void init();
 	// Draws the node and its children.  TODO: modify this method signature if needed!
-	void draw(const std::shared_ptr<Program> prog2, const std::shared_ptr<MatrixStack> MV, float* frameData) const;
+  void draw(const std::shared_ptr<Program> prog, const std::shared_ptr<Program> prog2, const std::shared_ptr<MatrixStack> MV, GLuint vao, int fileid, const std::shared_ptr<Shape> teapot, const std::shared_ptr<Shape> sphere, const std::shared_ptr<Shape> cube, float* frameData,bool isHead) const;
 
 	// name of this node (useful for debugging)
 	std::string name;

@@ -22,9 +22,12 @@ using namespace std;
 
 GLFWwindow *window; // Main application window
 string RES_DIR = ""; // Where data files live
+int FILE_ID = 0;
 shared_ptr<Program> prog;
 shared_ptr<Program> prog2; // for drawing with colours
-shared_ptr<Shape> shape;
+shared_ptr<Shape> teapot;
+shared_ptr<Shape> sphere;
+shared_ptr<Shape> cube;
 shared_ptr<Motion> skeleton;
 
 int refreshRate = 60;
@@ -37,11 +40,11 @@ GLuint posBufID; // position buffer for drawing a line loop
 GLuint aPosLocation = 0; // location set in col_vert.glsl (or can be queried)
 const GLuint NumVertices = 6;
 GLfloat vertices[NumVertices][3] = {{0, 0, 0},
-									{1, 0, 0},
+									{2, 0, 0},
 									{0, 0, 0},
-									{0, 1, 0},
+									{0, 2, 0},
 									{0, 0, 0},
-									{0, 0, 1}};
+									{0, 0, 2}};
 
 
 static void error_callback(int error, const char *description)
@@ -93,13 +96,31 @@ static void init()
 	// Enable z-buffer test.
 	glEnable(GL_DEPTH_TEST);
 
-	// Initialize mesh.
-	shape = make_shared<Shape>();
-	shape->loadMesh(RES_DIR + "teapot.obj");
-	shape->init();
-
+	// Initialize meshes.
+	teapot = make_shared<Shape>();
+	teapot->loadMesh(RES_DIR + "teapot.obj");
+	teapot->init();
+	sphere = make_shared<Shape>();
+	sphere->loadMesh(RES_DIR + "sphere.obj");
+	sphere->init();
+	cube = make_shared<Shape>();
+	cube->loadMesh(RES_DIR + "cube.obj");
+	cube->init();	
+	
 	skeleton = make_shared<Motion>();
-	skeleton->loadBVH(RES_DIR + "0019_AdvanceBollywoodDance001.bvh");
+	std::string filename;
+	switch(FILE_ID) {
+	case 0:
+	  filename = "0019_AdvanceBollywoodDance001.bvh";
+	  break;
+	case 1:
+	  filename = "Cyrus_Take6.bvh";
+	  break;
+	case 2:
+	  filename = "OptiTrack-IITSEC2007.bvh";
+	  break;
+	}
+	skeleton->loadBVH(RES_DIR + filename);
 	cout << "skeleton number of datapoints: " << skeleton->numChannels << "\n";
 	
 	// Initialize the GLSL programs.
@@ -167,20 +188,21 @@ static void render()
 	// Apply camera transform.
 	MV->pushMatrix();
 	MV->translate(glm::vec3(0, -1, -3));
-
-	double t = glfwGetTime();
+	MV->scale(0.01);
 	
 	// Draw axes.
 	prog2->bind();
-	MV->pushMatrix();
-	MV->scale(0.01);
 	glUniformMatrix4fv(prog2->getUniform("P"), 1, GL_FALSE, &P->topMatrix()[0][0]);
 	glBindVertexArray(vao);
 	drawAxes(prog2, MV);
+    prog2->unbind();
 
-	skeleton->root->draw(prog2, MV, skeleton->data + fc * skeleton->numChannels);
-	MV->popMatrix();
-	prog2->unbind();
+	prog->bind();
+	glUniformMatrix4fv(prog->getUniform("P"), 1, GL_FALSE, &P->topMatrix()[0][0]);
+	prog->unbind();
+	
+	skeleton->root->draw(prog, prog2, MV, vao, FILE_ID, teapot, sphere, cube, skeleton->data + fc * skeleton->numChannels, true); // set this boolean to false for a truly cursed image
+	
 	/*
 	// Draw teapot.
 	prog->bind();
@@ -222,6 +244,14 @@ int main(int argc, char **argv)
 	}
 	RES_DIR = argv[1] + string("/");
 
+	
+	if(argc >= 3) {
+	  if(!strcmp(argv[2], "1"))
+		FILE_ID = 1;
+	  else if(!strcmp(argv[2], "2"))
+		FILE_ID = 2;
+	}
+	
 	// Set error callback.
 	glfwSetErrorCallback(error_callback);
 	// Initialize the library.
