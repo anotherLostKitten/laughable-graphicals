@@ -1,3 +1,4 @@
+//theodore peters 260919785
 #define _USE_MATH_DEFINES
 #include <cmath>
 #include <iostream>
@@ -136,7 +137,7 @@ static void init()
 	
 	prog2 = make_shared<Program>();
 	prog2->setVerbose(true);
-	prog2->setShaderNames(RES_DIR + "col_vert.glsl", RES_DIR + "col_frag.glsl");
+	prog2->setShaderNames(RES_DIR + "axs_vert.glsl", RES_DIR + "col_frag.glsl");
 	prog2->init();
 	prog2->addUniform("P");
 	prog2->addUniform("MV");
