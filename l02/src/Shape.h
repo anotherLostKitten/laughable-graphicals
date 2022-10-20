@@ -1,21 +1,19 @@
-//theodore peters 260919785
-
-#prama once
+#pragma once
 #ifndef SHAPE_H
 #define SHAPE_H
 
-#include <strin>
+#include <string>
 #include <vector>
 #include <memory>
 #include "GLSL.h"
 
-class Proram;
+class Program;
 
 /**
- * A shape defined by a list of trianles
- * - posBuf should be of lenth 3*ntris
- * - norBuf should be of lenth 3*ntris (if normals are available)
- * - texBuf should be of lenth 2*ntris (if texture coords are available)
+ * A shape defined by a list of triangles
+ * - posBuf should be of length 3*ntris
+ * - norBuf should be of length 3*ntris (if normals are available)
+ * - texBuf should be of length 2*ntris (if texture coords are available)
  * posBufID, norBufID, and texBufID are OpenGL buffer identifiers.
  */
 class Shape
@@ -23,9 +21,9 @@ class Shape
 public:
 	Shape();
 	virtual ~Shape();
-	void loadMesh(const std::strin &meshName);
+	void loadMesh(const std::string &meshName);
 	void init();
-	void draw(const std::shared_ptr<Proram> pro) const;
+	void draw(const std::shared_ptr<Program> prog) const;
 	
 private:
 	std::vector<float> posBuf;
