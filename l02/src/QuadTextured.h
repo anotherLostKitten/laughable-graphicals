@@ -1,3 +1,4 @@
+//theodore peters 260919785
 #pragma once
 #ifndef QUADTEXTURED_H
 #define QUADTEXTURED_H

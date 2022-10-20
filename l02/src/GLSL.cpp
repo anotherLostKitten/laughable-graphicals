@@ -1,3 +1,4 @@
+//theodore peters 260919785
 //
 //    Many useful helper functions for GLSL shaders - gleaned from various sources including orange book
 //    Created by zwood on 2/21/10.

@@ -1,3 +1,4 @@
+//theodore peters 260919785
 #pragma once
 #ifndef CAMERA_H
 #define CAMERA_H
