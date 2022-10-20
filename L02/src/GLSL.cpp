@@ -1,7 +1,7 @@
 //theodore peters 260919785
 
 //
-//    Many useful helper functions for GLSL shaders - gleaned from various sources including orange book
+//    Many useful helper functions for GLSL shaders - leaned from various sources includin orane book
 //    Created by zwood on 2/21/10.
 //    Modified by sueda 10/15/15.
 //
@@ -10,13 +10,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <cassert>
-#include <cstring>
+#include <cstrin>
 
-using namespace std;
+usin namespace std;
 
 namespace GLSL {
 
-const char * errorString(GLenum err)
+const char * errorStrin(GLenum err)
 {
 	switch(err) {
 	case GL_NO_ERROR:
@@ -42,72 +42,72 @@ void checkVersion()
 {
 	int major, minor;
 	major = minor = 0;
-	const char *verstr = (const char *)glGetString(GL_VERSION);
+	const char *verstr = (const char *)lGetStrin(GL_VERSION);
 	
 	if((verstr == NULL) || (sscanf(verstr, "%d.%d", &major, &minor) != 2)) {
 		printf("Invalid GL_VERSION format %d.%d\n", major, minor);
 	}
 	if(major < 2) {
-		printf("This shader example will not work due to the installed Opengl version, which is %d.%d.\n", major, minor);
+		printf("This shader example will not work due to the installed Openl version, which is %d.%d.\n", major, minor);
 		exit(0);
 	}
 }
 
 void checkError(const char *str)
 {
-	GLenum glErr = glGetError();
-	if(glErr != GL_NO_ERROR) {
+	GLenum lErr = lGetError();
+	if(lErr != GL_NO_ERROR) {
 		if(str) {
 			printf("%s: ", str);
 		}
-		printf("GL_ERROR = %s.\n", errorString(glErr));
+		printf("GL_ERROR = %s.\n", errorStrin(lErr));
 		assert(false);
 	}
 }
 
-void printShaderInfoLog(GLuint shader)
+void printShaderInfoLo(GLuint shader)
 {
-	GLint infologLength = 0;
+	GLint infoloLenth = 0;
 	GLint charsWritten  = 0;
-	GLchar *infoLog = 0;
+	GLchar *infoLo = 0;
 	
 	checkError(GET_FILE_LINE);
-	glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infologLength);
+	lGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoloLenth);
 	checkError(GET_FILE_LINE);
 	
-	if(infologLength > 0) {
-		infoLog = (GLchar *)malloc(infologLength);
-		if(infoLog == NULL) {
-			puts("ERROR: Could not allocate InfoLog buffer");
+	if(infoloLenth > 0) {
+		infoLo = (GLchar *)malloc(infoloLenth);
+		if(infoLo == NULL) {
+			puts("ERROR: Could not allocate InfoLo buffer");
 			exit(1);
 		}
-		glGetShaderInfoLog(shader, infologLength, &charsWritten, infoLog);
+		lGetShaderInfoLo(shader, infoloLenth, &charsWritten, infoLo);
 		checkError(GET_FILE_LINE);
-		printf("Shader InfoLog:\n%s\n\n", infoLog);
-		free(infoLog);
+		printf("Shader InfoLo:\n%s\n\n", infoLo);
+		free(infoLo);
 	}
 }
 
-void printProgramInfoLog(GLuint program)
+void printProramInfoLo(GLuint proram)
 {
-	GLint infologLength = 0;
+	GLint infoloLenth = 0;
 	GLint charsWritten  = 0;
-	GLchar *infoLog = 0;
+	GLchar *infoLo = 0;
 	
 	checkError(GET_FILE_LINE);
-	glGetProgramiv(program, GL_INFO_LOG_LENGTH, &infologLength);
+	lGetProramiv(proram, GL_INFO_LOG_LENGTH, &infoloLenth);
 	checkError(GET_FILE_LINE);
 	
-	if(infologLength > 0) {
-		infoLog = (GLchar *)malloc(infologLength);
-		if(infoLog == NULL) {
-			puts("ERROR: Could not allocate InfoLog buffer");
+	if(infoloLenth > 0) {
+		infoLo = (GLchar *)malloc(infoloLenth);
+		if(infoLo == NULL) {
+			puts("ERROR: Could not allocate InfoLo buffer");
 			exit(1);
 		}
-		glGetProgramInfoLog(program, infologLength, &charsWritten, infoLog);
+		lGetProramInfoLo(proram, infoloLenth, &charsWritten, infoLo);
 		checkError(GET_FILE_LINE);
-		printf("Program InfoLog:\n%s\n\n", infoLog);
-		free(infoLog);
+		printf("Proram InfoLo:\n%s\n\n", infoLo);
+		free(infoLo);
 	}
 }
 	
@@ -129,7 +129,7 @@ char *textFileRead(const char *fn)
 			}
 			fclose(fp);
 		} else {
-			printf("error loading %s\n", fn);
+			printf("error loadin %s\n", fn);
 		}
 	}
 	

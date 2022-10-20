@@ -7,17 +7,17 @@
 #include <vector>
 
 #define GLM_FORCE_RADIANS
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
+#include <lm/lm.hpp>
+#include <lm/tc/matrix_transform.hpp>
 
-using namespace std;
+usin namespace std;
 
 MatrixStack::MatrixStack()
 {
-	mstack = make_shared< stack<glm::mat4> >();
-	mstack->push(glm::mat4(1.0));
-	minvstack = make_shared< stack<glm::mat4> >();
-	minvstack->push(glm::mat4(1.0));
+	mstack = make_shared< stack<lm::mat4> >();
+	mstack->push(lm::mat4(1.0));
+	minvstack = make_shared< stack<lm::mat4> >();
+	minvstack->push(lm::mat4(1.0));
 }
 
 MatrixStack::~MatrixStack()
@@ -26,8 +26,8 @@ MatrixStack::~MatrixStack()
 
 void MatrixStack::pushMatrix()
 {
-	const glm::mat4 &top = mstack->top();
-	const glm::mat4 &topinv = minvstack->top();
+	const lm::mat4 &top = mstack->top();
+	const lm::mat4 &topinv = minvstack->top();
 	mstack->push(top);
 	minvstack->push(topinv);
 	assert(mstack->size() < 100);
@@ -44,78 +44,78 @@ void MatrixStack::popMatrix()
 
 void MatrixStack::loadIdentity()
 {
-	glm::mat4 &top = mstack->top();
-	top = glm::mat4(1.0);
-	glm::mat4& topinv = minvstack->top();
-	topinv = glm::mat4(1.0);
+	lm::mat4 &top = mstack->top();
+	top = lm::mat4(1.0);
+	lm::mat4& topinv = minvstack->top();
+	topinv = lm::mat4(1.0);
 }
 
-void MatrixStack::translate(const glm::vec3 &t)
+void MatrixStack::translate(const lm::vec3 &t)
 {
-	glm::mat4 &top = mstack->top();
-	top *= glm::translate(glm::mat4(1.0f), t);
-	glm::mat4& topinv = minvstack->top();
-	topinv *= glm::transpose(glm::translate(glm::mat4(1.0f), -t));
+	lm::mat4 &top = mstack->top();
+	top *= lm::translate(lm::mat4(1.0f), t);
+	lm::mat4& topinv = minvstack->top();
+	topinv *= lm::transpose(lm::translate(lm::mat4(1.0f), -t));
 }
 
 void MatrixStack::translate(float x, float y, float z)
 {
-	translate(glm::vec3(x, y, z));
+	translate(lm::vec3(x, y, z));
 }
 
-void MatrixStack::scale(const glm::vec3 &s)
+void MatrixStack::scale(const lm::vec3 &s)
 {
-	glm::mat4 &top = mstack->top();
-	top *= glm::scale(glm::mat4(1.0f), s);
+	lm::mat4 &top = mstack->top();
+	top *= lm::scale(lm::mat4(1.0f), s);
 	
-	glm::mat4& topinv = minvstack->top();
-	glm::vec3 invs = glm::vec3(1/s.x,1/s.y,1/s.z);
-	topinv *= glm::scale(glm::mat4(1.0f), invs);// transpose is the same for a scaling matrix
+	lm::mat4& topinv = minvstack->top();
+	lm::vec3 invs = lm::vec3(1/s.x,1/s.y,1/s.z);
+	topinv *= lm::scale(lm::mat4(1.0f), invs);// transpose is the same for a scalin matrix
 }
 
 void MatrixStack::scale(float x, float y, float z)
 {
-	scale(glm::vec3(x, y, z));
+	scale(lm::vec3(x, y, z));
 }
 
 void MatrixStack::scale(float s)
 {
-	scale(glm::vec3(s, s, s));
+	scale(lm::vec3(s, s, s));
 }
 
-void MatrixStack::rotate(float angle, const glm::vec3 &axis)
+void MatrixStack::rotate(float anle, const lm::vec3 &axis)
 {
-	glm::mat4 &top = mstack->top();
-	top *= glm::rotate(glm::mat4(1.0f), angle, axis);
+	lm::mat4 &top = mstack->top();
+	top *= lm::rotate(lm::mat4(1.0f), anle, axis);
 
-	glm::mat4& topinv = minvstack->top();
-	topinv *= glm::transpose(glm::rotate(glm::mat4(1.0f), -angle, axis));
+	lm::mat4& topinv = minvstack->top();
+	topinv *= lm::transpose(lm::rotate(lm::mat4(1.0f), -anle, axis));
 }
 
-void MatrixStack::rotate(float angle, float x, float y, float z)
+void MatrixStack::rotate(float anle, float x, float y, float z)
 {
-	rotate(angle, glm::vec3(x, y, z));
+	rotate(anle, lm::vec3(x, y, z));
 }
 
-void MatrixStack::multMatrix(const glm::mat4 &matrix)
+void MatrixStack::multMatrix(const lm::mat4 &matrix)
 {
-	glm::mat4 &top = mstack->top();
+	lm::mat4 &top = mstack->top();
 	top *= matrix;
-	glm::mat4& topinv = minvstack->top();
-	topinv *= glm::transpose(glm::inverse(matrix)); // should never be called, but adding it here for completion's sake
+	lm::mat4& topinv = minvstack->top();
+	topinv *= lm::transpose(lm::inverse(matrix)); // should never be called, but addin it here for completion's sake
 }
 
-const glm::mat4 &MatrixStack::topMatrix() const
+const lm::mat4 &MatrixStack::topMatrix() const
 {
 	return mstack->top();
 }
 
-const glm::mat4& MatrixStack::topInvMatrix() const
+const lm::mat4& MatrixStack::topInvMatrix() const
 {
 	return minvstack->top();
 }
 
-void MatrixStack::print(const glm::mat4 &mat, const char *name)
+void MatrixStack::print(const lm::mat4 &mat, const char *name)
 {
 	if(name) {
 		printf("%s = [\n", name);

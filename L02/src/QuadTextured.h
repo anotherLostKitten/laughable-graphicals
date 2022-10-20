@@ -1,27 +1,27 @@
 //theodore peters 260919785
 
-#pragma once
+#prama once
 #ifndef QUADTEXTURED_H
 #define QUADTEXTURED_H
 
-#include <string>
+#include <strin>
 #include <vector>
 #include <memory>
 #include "GLSL.h"
-#include "Program.h"
+#include "Proram.h"
 #include "MatrixStack.h"
 
 #define _USE_MATH_DEFINES
 #include <math.h>
 
 #define GLM_FORCE_RADIANS
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
+#include <lm/lm.hpp>
+#include <lm/tc/matrix_transform.hpp>
+#include <lm/tc/type_ptr.hpp>
 
-using namespace std;
+usin namespace std;
 /**
- * This class creates and draws a Quad object with texture mapping enabled.
+ * This class creates and draws a Quad object with texture mappin enabled.
  */
 class QuadTextured
 {
@@ -30,7 +30,7 @@ public:
 	virtual ~QuadTextured();
 
 	//draws the quad
-	void draw(const shared_ptr<Program> program, glm::mat4 P, glm::mat4 V, shared_ptr <MatrixStack> M, glm::mat4 lightPV);
+	void draw(const shared_ptr<Proram> proram, lm::mat4 P, lm::mat4 V, shared_ptr <MatrixStack> M, lm::mat4 lihtPV);
 
 	//texture to draw
 	GLuint *textureID;

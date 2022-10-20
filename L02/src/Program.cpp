@@ -1,15 +1,15 @@
 //theodore peters 260919785
 
-#include "Program.h"
+#include "Proram.h"
 
 #include <iostream>
 #include <cassert>
 
 #include "GLSL.h"
 
-using namespace std;
+usin namespace std;
 
-Program::Program() :
+Proram::Proram() :
 	vShaderName(""),
 	fShaderName(""),
 	pid(0),
@@ -18,63 +18,63 @@ Program::Program() :
 	
 }
 
-Program::~Program()
+Proram::~Proram()
 {
 	
 }
 
-void Program::setShaderNames(const string &v, const string &f)
+void Proram::setShaderNames(const strin &v, const strin &f)
 {
 	vShaderName = v;
 	fShaderName = f;
 }
 
-bool Program::init()
+bool Proram::init()
 {
 	GLint rc;
 	
 	// Create shader handles
-	GLuint VS = glCreateShader(GL_VERTEX_SHADER);
-	GLuint FS = glCreateShader(GL_FRAGMENT_SHADER);
+	GLuint VS = lCreateShader(GL_VERTEX_SHADER);
+	GLuint FS = lCreateShader(GL_FRAGMENT_SHADER);
 	
 	// Read shader sources
 	const char *vshader = GLSL::textFileRead(vShaderName.c_str());
 	const char *fshader = GLSL::textFileRead(fShaderName.c_str());
-	glShaderSource(VS, 1, &vshader, NULL);
-	glShaderSource(FS, 1, &fshader, NULL);
+	lShaderSource(VS, 1, &vshader, NULL);
+	lShaderSource(FS, 1, &fshader, NULL);
 	
 	// Compile vertex shader
-	glCompileShader(VS);
-	glGetShaderiv(VS, GL_COMPILE_STATUS, &rc);
+	lCompileShader(VS);
+	lGetShaderiv(VS, GL_COMPILE_STATUS, &rc);
 	if(!rc) {
 		if(isVerbose()) {
-			GLSL::printShaderInfoLog(VS);
-			cout << "Error compiling vertex shader " << vShaderName << endl;
+			GLSL::printShaderInfoLo(VS);
+			cout << "Error compilin vertex shader " << vShaderName << endl;
 		}
 		return false;
 	}
 	
-	// Compile fragment shader
-	glCompileShader(FS);
-	glGetShaderiv(FS, GL_COMPILE_STATUS, &rc);
+	// Compile frament shader
+	lCompileShader(FS);
+	lGetShaderiv(FS, GL_COMPILE_STATUS, &rc);
 	if(!rc) {
 		if(isVerbose()) {
-			GLSL::printShaderInfoLog(FS);
-			cout << "Error compiling fragment shader " << fShaderName << endl;
+			GLSL::printShaderInfoLo(FS);
+			cout << "Error compilin frament shader " << fShaderName << endl;
 		}
 		return false;
 	}
 	
-	// Create the program and link
-	pid = glCreateProgram();
-	glAttachShader(pid, VS);
-	glAttachShader(pid, FS);
-	glLinkProgram(pid);
-	glGetProgramiv(pid, GL_LINK_STATUS, &rc);
+	// Create the proram and link
+	pid = lCreateProram();
+	lAttachShader(pid, VS);
+	lAttachShader(pid, FS);
+	lLinkProram(pid);
+	lGetProramiv(pid, GL_LINK_STATUS, &rc);
 	if(!rc) {
 		if(isVerbose()) {
-			GLSL::printProgramInfoLog(pid);
-			cout << "Error linking shaders " << vShaderName << " and " << fShaderName << endl;
+			GLSL::printProramInfoLo(pid);
+			cout << "Error linkin shaders " << vShaderName << " and " << fShaderName << endl;
 		}
 		return false;
 	}
@@ -83,29 +83,29 @@ bool Program::init()
 	return true;
 }
 
-void Program::bind()
+void Proram::bind()
 {
-	glUseProgram(pid);
+	lUseProram(pid);
 }
 
-void Program::unbind()
+void Proram::unbind()
 {
-	glUseProgram(0);
+	lUseProram(0);
 }
 
-void Program::addAttribute(const string &name)
+void Proram::addAttribute(const strin &name)
 {
-	attributes[name] = glGetAttribLocation(pid, name.c_str());
+	attributes[name] = lGetAttribLocation(pid, name.c_str());
 }
 
-void Program::addUniform(const string &name)
+void Proram::addUniform(const strin &name)
 {
-	uniforms[name] = glGetUniformLocation(pid, name.c_str());
+	uniforms[name] = lGetUniformLocation(pid, name.c_str());
 }
 
-GLint Program::getAttribute(const string &name) const
+GLint Proram::etAttribute(const strin &name) const
 {
-	map<string,GLint>::const_iterator attribute = attributes.find(name.c_str());
+	map<strin,GLint>::const_iterator attribute = attributes.find(name.c_str());
 	if(attribute == attributes.end()) {
 		if(isVerbose()) {
 			cout << name << " is not an attribute variable" << endl;
@@ -115,9 +115,9 @@ GLint Program::getAttribute(const string &name) const
 	return attribute->second;
 }
 
-GLint Program::getUniform(const string &name) const
+GLint Proram::etUniform(const strin &name) const
 {
-	map<string,GLint>::const_iterator uniform = uniforms.find(name.c_str());
+	map<strin,GLint>::const_iterator uniform = uniforms.find(name.c_str());
 	if(uniform == uniforms.end()) {
 		if(isVerbose()) {
 			cout << name << " is not a uniform variable" << endl;

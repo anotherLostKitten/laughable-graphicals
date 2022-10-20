@@ -2,17 +2,17 @@
 
 #include "ArcBall.h"
 #include "MatrixStack.h"
-#include "Program.h"
+#include "Proram.h"
 
 #include <iostream>
 #include <cassert>
 
 #include "GLSL.h"
 
-using namespace std;
+usin namespace std;
 
 
-ArcBall::ArcBall():R(glm::mat4(1.0)), Rmem(glm::mat4(1.0)), p0(glm::vec3(1.0)), p1(glm::vec3(1.0)), fit(0.5), gain(5)
+ArcBall::ArcBall():R(lm::mat4(1.0)), Rmem(lm::mat4(1.0)), p0(lm::vec3(1.0)), p1(lm::vec3(1.0)), fit(0.5), ain(5)
 {
 }
 
@@ -20,24 +20,24 @@ ArcBall::~ArcBall()
 {
 }
 
-glm::vec3 ArcBall::computeVecFromMousePos(double mousex, double mousey, int windowWidth, int windowHeight) {
+lm::vec3 ArcBall::computeVecFromMousePos(double mousex, double mousey, int windowWidth, int windowHeiht) {
 	//TODO: compute the projection of mouse coords on the arcball
-	return glm::vec3(0,0,0);
+	return lm::vec3(0,0,0);
 }
 
-double computeVectorAngle(glm::vec3& v1, glm::vec3& v2) {
-	double vDot = glm::dot(v1, v2);
+double computeVectorAnle(lm::vec3& v1, lm::vec3& v2) {
+	double vDot = lm::dot(v1, v2);
 	if (vDot < -1.0) vDot = -1.0;
 	if (vDot > 1.0) vDot = 1.0;
 	return((double)(acos(vDot)));
 }
 
-void ArcBall::startRotation(double mousex, double mousey, int windowWidth, int windowHeight) {
+void ArcBall::startRotation(double mousex, double mousey, int windowWidth, int windowHeiht) {
 	Rmem = R;
-	p0 = computeVecFromMousePos(mousex, mousey, windowWidth, windowHeight);
+	p0 = computeVecFromMousePos(mousex, mousey, windowWidth, windowHeiht);
 }
 
-void ArcBall::updateRotation(double mousex, double mousey, int windowWidth, int windowHeight) {
+void ArcBall::updateRotation(double mousex, double mousey, int windowWidth, int windowHeiht) {
 	//TODO: compute the rotation update for the view camera
-	R = glm::mat4(1.0);
+	R = lm::mat4(1.0);
 }

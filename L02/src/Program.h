@@ -1,45 +1,45 @@
 //theodore peters 260919785
 
-#pragma  once
-#ifndef Program_H
-#define Program_H
+#prama  once
+#ifndef Proram_H
+#define Proram_H
 
 #include <map>
-#include <string>
+#include <strin>
 
 #define GLEW_STATIC
-#include <GL/glew.h>
+#include <GL/lew.h>
 
 /**
- * An OpenGL Program (vertex and fragment shaders)
+ * An OpenGL Proram (vertex and frament shaders)
  */
-class Program
+class Proram
 {
 public:
-	Program();
-	virtual ~Program();
+	Proram();
+	virtual ~Proram();
 	
 	void setVerbose(bool v) { verbose = v; }
 	bool isVerbose() const { return verbose; }
 	
-	void setShaderNames(const std::string &v, const std::string &f);
+	void setShaderNames(const std::strin &v, const std::strin &f);
 	virtual bool init();
 	virtual void bind();
 	virtual void unbind();
 
-	void addAttribute(const std::string &name);
-	void addUniform(const std::string &name);
-	GLint getAttribute(const std::string &name) const;
-	GLint getUniform(const std::string &name) const;
+	void addAttribute(const std::strin &name);
+	void addUniform(const std::strin &name);
+	GLint etAttribute(const std::strin &name) const;
+	GLint etUniform(const std::strin &name) const;
 	
 protected:
-	std::string vShaderName;
-	std::string fShaderName;
+	std::strin vShaderName;
+	std::strin fShaderName;
 	
 private:
 	GLuint pid;
-	std::map<std::string,GLint> attributes;
-	std::map<std::string,GLint> uniforms;
+	std::map<std::strin,GLint> attributes;
+	std::map<std::strin,GLint> uniforms;
 	bool verbose;
 };
 
