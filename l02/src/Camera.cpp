@@ -15,13 +15,20 @@ Camera::~Camera()
 }
 
 void Camera::setPerspective(float fov, float aspect, float near, float far) {
-	// TODO: Replace the default projection matrix with one constructed from the parameters available in this class!
-	P = glm::mat4(1.0);
+  P = glm::perspective(fov, aspect, near, far);
 }
 
 void Camera::updateView() {
-	// TODO: Replace the default viewing matrix with one constructed from the parameters available in this class!
-	V = glm::mat4(1.0);
+  // V = glm::lookAt(position, lookAt, up);
+  glm::vec3 w = glm::normalize(position - lookAt);
+  glm::vec3 u = glm::normalize(glm::cross(up, w));
+  glm::vec3 v = glm::cross(w, u);
+  glm::mat4 mat = glm::mat4(1.0);
+  mat[0] = glm::vec4(u, 0.f);
+  mat[1] = glm::vec4(v, 0.f);
+  mat[2] = glm::vec4(w, 0.f);
+  mat[3] = glm::vec4(position, 1.f);
+  V = glm::inverse(mat);
 }
 
 
