@@ -42,23 +42,15 @@ void Camera::draw(const shared_ptr<Program> program, glm::mat4 P, glm::mat4 V, s
 	glUniformMatrix4fv(program->getUniform("M"), 1, GL_FALSE, &M->topMatrix()[0][0]);
 	glUniformMatrix4fv(program->getUniform("MinvT"), 1, GL_FALSE, &M->topInvMatrix()[0][0]);
 	glUniformMatrix4fv(program->getUniform("lightPV"), 1, GL_FALSE, &LightPV[0][0]);
-	
-	glm::vec3 w = glm::normalize(position - lookAt);
-	glm::vec3 u = glm::normalize(glm::cross(up, w));
-	glm::vec3 v = glm::cross(w, u);
-	glm::mat4 mat = glm::mat4(1.0);
-	mat[0] = glm::vec4(u, 0.f);
-	mat[1] = glm::vec4(v, 0.f);
-	mat[2] = glm::vec4(w, 0.f);
-	mat[3] = glm::vec4(position, 1.f);
-	M->multMatrix(mat);
+    
+	M->multMatrix(glm::inverse(this->V));
 	
 	axis.draw(program, M);
 
 	//draw the camera's wirecube
 	M->pushMatrix();
 
-	// TODO: draw the light camera frustum using the inverse projection with a wire cube. You must set up the right transformation!
+	M->multMatrix(glm::inverse(this->P));
 
 	debugWireCube->draw(program, P, V, M, LightPV);
 
