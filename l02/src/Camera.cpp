@@ -59,7 +59,8 @@ void Camera::draw(const shared_ptr<Program> program, glm::mat4 P, glm::mat4 V, s
 	M->pushMatrix();	
 	// TODO: draw the light view on the near plane of the frustum. You must set up the right transformation! 
 	// That is, translate and scale the x and y directions of the -1 to 1 quad so that the quad fits exactly the l r t b portion of the near plane
-	//debugDepthMapQuad->draw(quadShader, P, V, M, LightPV);
+	M->translate(0,0,-1);
+	debugDepthMapQuad->draw(quadShader, P, V, M, LightPV);
 
 	M->popMatrix();
 	M->popMatrix();
