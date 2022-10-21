@@ -31,8 +31,15 @@ void Axis::draw(const shared_ptr<Program> program,shared_ptr <MatrixStack> M) {
 	//draw frame
 	glUniform1i(program->getUniform("enableLighting"), false);
 
-	//TODO: draw axis like in A1
+	glUniform3f(program->getUniform("col"), 1, 0, 0);
+	glDrawArrays(GL_LINES, 0, 2);
 
+	glUniform3f(program->getUniform("col"), 0, 1, 0);
+	glDrawArrays(GL_LINES, 2, 2);
+
+	glUniform3f(program->getUniform("col"), 0, 0, 1);
+	glDrawArrays(GL_LINES, 4, 2);
+	
 	glUniform1i(program->getUniform("enableLighting"), true);
 
 

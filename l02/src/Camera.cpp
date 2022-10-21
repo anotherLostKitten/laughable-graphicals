@@ -43,14 +43,23 @@ void Camera::draw(const shared_ptr<Program> program, glm::mat4 P, glm::mat4 V, s
 	glUniformMatrix4fv(program->getUniform("MinvT"), 1, GL_FALSE, &M->topInvMatrix()[0][0]);
 	glUniformMatrix4fv(program->getUniform("lightPV"), 1, GL_FALSE, &LightPV[0][0]);
 	
-	// TODO: draw the light frame using a fancy axis... You must set up the right transformation!
+	glm::vec3 w = glm::normalize(position - lookAt);
+	glm::vec3 u = glm::normalize(glm::cross(up, w));
+	glm::vec3 v = glm::cross(w, u);
+	glm::mat4 mat = glm::mat4(1.0);
+	mat[0] = glm::vec4(u, 0.f);
+	mat[1] = glm::vec4(v, 0.f);
+	mat[2] = glm::vec4(w, 0.f);
+	mat[3] = glm::vec4(position, 1.f);
+	M->multMatrix(mat);
+	
 	axis.draw(program, M);
 
 	//draw the camera's wirecube
 	M->pushMatrix();
 
 	// TODO: draw the light camera frustum using the inverse projection with a wire cube. You must set up the right transformation!
-	
+
 	debugWireCube->draw(program, P, V, M, LightPV);
 
 	program->unbind();
@@ -58,7 +67,7 @@ void Camera::draw(const shared_ptr<Program> program, glm::mat4 P, glm::mat4 V, s
 	M->pushMatrix();	
 	// TODO: draw the light view on the near plane of the frustum. You must set up the right transformation! 
 	// That is, translate and scale the x and y directions of the -1 to 1 quad so that the quad fits exactly the l r t b portion of the near plane
-	debugDepthMapQuad->draw(quadShader, P, V, M, LightPV);
+	//debugDepthMapQuad->draw(quadShader, P, V, M, LightPV);
 
 	M->popMatrix();
 	M->popMatrix();
