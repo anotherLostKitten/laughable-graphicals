@@ -38,7 +38,7 @@ public:
 	virtual ~Scene();
 
 	//renders the scene
-	void renderScene(const std::shared_ptr<Program> program, glm::mat4 P, glm::mat4 V, shared_ptr <MatrixStack> M, glm::mat4 lightPV, bool isShadowPipeline, double time);
+	void renderScene(const std::shared_ptr<Program> program, glm::mat4 P, glm::mat4 V, shared_ptr <MatrixStack> M, glm::mat4 lightPV, glm::vec4 lightPos, bool isShadowPipeline, double time);
 
 	//aspect ratio
 	float* aspect;
@@ -61,12 +61,12 @@ private:
 	Axis axis;
 
 	//draw calls for the scene objects
-	void renderTeapot(const shared_ptr<Program> program, glm::mat4 P, glm::mat4 V, shared_ptr <MatrixStack> M, glm::mat4 lightPV, double time);
-	void renderFloor(const shared_ptr<Program> program, glm::mat4 P, glm::mat4 V, shared_ptr <MatrixStack> M, glm::mat4 lightPV);
-	void renderTentacles(const shared_ptr<Program> program, glm::mat4 P, glm::mat4 V, shared_ptr <MatrixStack> M, glm::mat4 LightPV, double time);
+	void renderTeapot(const shared_ptr<Program> program, glm::mat4 P, glm::mat4 V, shared_ptr <MatrixStack> M, glm::mat4 lightPV, glm::vec4 lightPos, double time);
+	void renderFloor(const shared_ptr<Program> program, glm::mat4 P, glm::mat4 V, shared_ptr <MatrixStack> M, glm::mat4 lightPV, glm::vec4 lightPos);
+	void renderTentacles(const shared_ptr<Program> program, glm::mat4 P, glm::mat4 V, shared_ptr <MatrixStack> M, glm::mat4 LightPV, glm::vec4 lightPos, double time);
 
 	//function that sets the uniform variables of the current shader. This is mostly here to reduce code redundancy.
-	void setUniforms(const shared_ptr<Program> program, glm::mat4 P, glm::mat4 V, shared_ptr <MatrixStack> M, glm::mat4 lightPV);
+	void setUniforms(const shared_ptr<Program> program, glm::mat4 P, glm::mat4 V, shared_ptr <MatrixStack> M, glm::mat4 lightPV, glm::vec4 lightPos);
 
 	//location of the shader inputs for the vao. This determines where the positions, normals and texture coordinate are stored.
 	GLuint aPosLocation;

@@ -35,7 +35,11 @@ void main(void) {
 		vec3 reflectedLight = ks * lightColor * specular;
 		vec3 ambientLight = kd * vec3( 0.1, 0.1, 0.1 );
 
-	    float shadow = 1.0; // TODO: compute shadows
+		vec3 scord = positionLightCVV.xyz / positionLightCVV.w;
+		scord = scord * 0.5 + 0.5;
+		float closest = texture(depthMap, scord.xy).r;
+		float current = scord.z;
+		float shadow = current > closest + sigma ? 0.0 : 1.0;
 		
 	    rgb = min( shadow * (scatteredLight + reflectedLight) + ambientLight, vec3(1,1,1) );
  	} 

@@ -45,7 +45,6 @@ void ArcBall::startRotation(double mousex, double mousey, int windowWidth, int w
 }
 
 void ArcBall::updateRotation(double mousex, double mousey, int windowWidth, int windowHeight) {
-  //TODO: compute the rotation update for the view camera
   p1 = computeVecFromMousePos(mousex, mousey, windowWidth, windowHeight);
   glm::vec3 axis = glm::cross(p0, p1);
   float angle = computeVectorAngle(p0, p1) * gain;

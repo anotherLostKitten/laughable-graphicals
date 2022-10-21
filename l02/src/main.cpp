@@ -256,7 +256,8 @@ static void render()
 	glm::mat4 R(1); // Creates a identity matrix
 	R = glm::rotate(R, dthetaz, glm::vec3(0.f, 0.f, 1.f));
 	R = glm::rotate(R, dthetax, glm::vec3(1.f, 0.f, 0.f));
-	scene->lightCam->position = glm::vec3(R * glm::vec4(scene->lightCam->position, 1));
+	glm::vec4 lightPos = R * glm::vec4(scene->lightCam->position, 1);
+	scene->lightCam->position = glm::vec3(lightPos);
 
 	scene->lightCam->updateView();
 
@@ -277,13 +278,13 @@ static void render()
 	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
 	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
 	glClear(GL_DEPTH_BUFFER_BIT);
-	scene->renderScene(drawLightDepthProgram, PL, VL, M, LightPV, true, time);
+	scene->renderScene(drawLightDepthProgram, PL, VL, M, LightPV, lightPos, true, time);
 
 	/// Render pass for the main window view
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glViewport(0, 0, windowWidth, windowHeight);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	scene->renderScene(perFragmentLightingProgram, PE, VE, M, LightPV, false, time);
+	scene->renderScene(perFragmentLightingProgram, PE, VE, M, LightPV, lightPos, false, time);
 
 	GLSL::checkError(GET_FILE_LINE);
 }

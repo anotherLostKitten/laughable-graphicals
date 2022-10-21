@@ -14,7 +14,7 @@ out vec4 positionLightCVV;
 
 void main() {
     vec4 Mpos = M * aPos;
-    positionLightCVV = vec4(0); //TODO: compute positionLightCVV 
+    positionLightCVV = LightPV * Mpos;
 
     vec4 normalDirection = MinvT * vec4(  aNor, 0 );
     normalForFP = (V * vec4(normalize( normalDirection.xyz ),0)).xyz;

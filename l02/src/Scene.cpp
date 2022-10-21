@@ -24,7 +24,7 @@ Scene::Scene(string RES_DIR, float* aspect, GLuint aPosLocation, GLuint aNorLoca
 
 	// Initialize sphere
 	sphere = make_shared<Shape>();
-	sphere->loadMesh(RES_DIR + "Sphere.obj");
+	sphere->loadMesh(RES_DIR + "sphere.obj");
 	sphere->init();
 
 	// Initialize camera	
@@ -49,14 +49,14 @@ Scene::~Scene()
 {
 }
 
-void Scene::renderScene(const shared_ptr<Program> program, glm::mat4 P, glm::mat4 V, shared_ptr <MatrixStack> M, glm::mat4 LightPV, bool isShadowPipeline, double time) {
+void Scene::renderScene(const shared_ptr<Program> program, glm::mat4 P, glm::mat4 V, shared_ptr <MatrixStack> M, glm::mat4 LightPV, glm::vec4 lightPos, bool isShadowPipeline, double time) {
 	//draw teapot
-	renderTeapot(program, P, V, M, LightPV, time);
+  renderTeapot(program, P, V, M, LightPV, lightPos, time);
 
 	//draw floor
-	renderFloor(program, P, V, M, LightPV);
+  renderFloor(program, P, V, M, LightPV, lightPos);
 
-	renderTentacles(program, P, V, M, LightPV, time);
+  renderTentacles(program, P, V, M, LightPV, lightPos, time);
 
 	if(!isShadowPipeline){
 		//draw camera
@@ -64,7 +64,7 @@ void Scene::renderScene(const shared_ptr<Program> program, glm::mat4 P, glm::mat
 	}
 }
 
-void Scene::renderTentacles(const shared_ptr<Program> program, glm::mat4 P, glm::mat4 V, shared_ptr <MatrixStack> M, glm::mat4 LightPV, double time) {
+void Scene::renderTentacles(const shared_ptr<Program> program, glm::mat4 P, glm::mat4 V, shared_ptr <MatrixStack> M, glm::mat4 LightPV, glm::vec4 lightPos, double time) {
 	program->bind();
 	M->pushMatrix();
 	M->rotate(-M_PI / 2, 1, 0, 0);
@@ -83,11 +83,11 @@ void Scene::renderTentacles(const shared_ptr<Program> program, glm::mat4 P, glm:
 			M->rotate(theta, 1, 0, 0);
 			double alpha = 0.1 * sin(time *1.3 + M_PI * i / 4.0 + 6 * rand());
 			M->rotate(alpha, 0, 1, 0);
-			setUniforms(program, P, V, M, LightPV);
+			setUniforms(program, P, V, M, LightPV, lightPos);
 			cube->draw(program);
 		}
 		M->translate(0, 0, 1.5);
-		setUniforms(program, P, V, M, LightPV);
+		setUniforms(program, P, V, M, LightPV, lightPos);
 		sphere->draw(program);
 		M->popMatrix();
 	}
@@ -96,7 +96,7 @@ void Scene::renderTentacles(const shared_ptr<Program> program, glm::mat4 P, glm:
 	program->unbind();
 }
 
-void Scene::renderTeapot(const shared_ptr<Program> program, glm::mat4 P, glm::mat4 V, shared_ptr <MatrixStack> M, glm::mat4 LightPV, double time) {
+void Scene::renderTeapot(const shared_ptr<Program> program, glm::mat4 P, glm::mat4 V, shared_ptr <MatrixStack> M, glm::mat4 LightPV, glm::vec4 lightPos, double time) {
 	// Draw teapot.
 	program->bind();
 
@@ -108,7 +108,7 @@ void Scene::renderTeapot(const shared_ptr<Program> program, glm::mat4 P, glm::ma
 	M->rotate((float)c, 0, 0, 1);
 	M->translate(0, 1, 0);
 	
-	setUniforms(program, P, V, M, LightPV);
+	setUniforms(program, P, V, M, LightPV, lightPos);
 	glUniform3f(program->getUniform("col"), 1, 0, 0);
 	
 	teapot->draw(program);
@@ -116,7 +116,7 @@ void Scene::renderTeapot(const shared_ptr<Program> program, glm::mat4 P, glm::ma
 	program->unbind();
 }
 
-void Scene::renderFloor(const shared_ptr<Program> program, glm::mat4 P, glm::mat4 V, shared_ptr <MatrixStack> M, glm::mat4 LightPV) {
+void Scene::renderFloor(const shared_ptr<Program> program, glm::mat4 P, glm::mat4 V, shared_ptr <MatrixStack> M, glm::mat4 LightPV, glm::vec4 lightPos) {
 	// Draw floor.
 	program->bind();
 
@@ -124,7 +124,7 @@ void Scene::renderFloor(const shared_ptr<Program> program, glm::mat4 P, glm::mat
 
 	M->scale(glm::vec3(1.5, 0.06, 1.5));
 	
-	setUniforms(program, P, V, M, LightPV);
+	setUniforms(program, P, V, M, LightPV, lightPos);
 	glUniform3f(program->getUniform("col"), 0, 1, 0);
 
 	cube->draw(program);
@@ -132,12 +132,10 @@ void Scene::renderFloor(const shared_ptr<Program> program, glm::mat4 P, glm::mat
 	program->unbind();
 }
 
-void Scene::setUniforms(const shared_ptr<Program> program, glm::mat4 P, glm::mat4 V, shared_ptr <MatrixStack> M, glm::mat4 LightPV) {
-	//TODO: compute light position of lightCam
-	glm::vec4 p(1);
+void Scene::setUniforms(const shared_ptr<Program> program, glm::mat4 P, glm::mat4 V, shared_ptr <MatrixStack> M, glm::mat4 LightPV, glm::vec4 lightPos) {
 
 	//storing uniform variables
-	glUniform3fv(program->getUniform("lightPos"), 1, &p[0]);
+	glUniform3fv(program->getUniform("lightPos"), 1, &lightPos[0]);
 	glUniform3fv(program->getUniform("ks"), 1, &ks[0]);
 	glUniform3fv(program->getUniform("lightColor"), 1, &lightCam->lightColor[0]);
 	glUniformMatrix4fv(program->getUniform("P"), 1, GL_FALSE, &P[0][0]);
