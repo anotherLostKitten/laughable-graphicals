@@ -271,7 +271,7 @@ static void render()
 
 	glm::mat4 LightPV = PL * VL;
 
-	double time = 0.;//glfwGetTime();
+	double time = glfwGetTime();
 
 	/// Render pass for the shadow map
 	// make the FBO active
