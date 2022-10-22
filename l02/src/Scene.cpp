@@ -133,7 +133,7 @@ void Scene::renderFloor(const shared_ptr<Program> program, glm::mat4 P, glm::mat
 }
 
 void Scene::setUniforms(const shared_ptr<Program> program, glm::mat4 P, glm::mat4 V, shared_ptr <MatrixStack> M, glm::mat4 LightPV, glm::vec4 lightPos) {
-  lightPos =  V *  lightPos;
+  lightPos =  V * lightPos;
   //storing uniform variables
   glUniform3fv(program->getUniform("lightPos"), 1, &lightPos[0]);
   glUniform3fv(program->getUniform("ks"), 1, &ks[0]);
