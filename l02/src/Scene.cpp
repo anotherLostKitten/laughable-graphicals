@@ -133,18 +133,18 @@ void Scene::renderFloor(const shared_ptr<Program> program, glm::mat4 P, glm::mat
 }
 
 void Scene::setUniforms(const shared_ptr<Program> program, glm::mat4 P, glm::mat4 V, shared_ptr <MatrixStack> M, glm::mat4 LightPV, glm::vec4 lightPos) {
-
-	//storing uniform variables
-	glUniform3fv(program->getUniform("lightPos"), 1, &lightPos[0]);
-	glUniform3fv(program->getUniform("ks"), 1, &ks[0]);
-	glUniform3fv(program->getUniform("lightColor"), 1, &lightCam->lightColor[0]);
-	glUniformMatrix4fv(program->getUniform("P"), 1, GL_FALSE, &P[0][0]);
-	glUniformMatrix4fv(program->getUniform("V"), 1, GL_FALSE, &V[0][0]);
-	glUniformMatrix4fv(program->getUniform("M"), 1, GL_FALSE, &M->topMatrix()[0][0]);
-	glUniformMatrix4fv(program->getUniform("MinvT"), 1, GL_FALSE, &M->topInvMatrix()[0][0]);
-	glUniformMatrix4fv(program->getUniform("LightPV"), 1, GL_FALSE, &LightPV[0][0]);
-	glUniform1i(program->getUniform("enableLighting"), true);
-	glUniform1i(program->getUniform("depthMap"), 1);
-	glUniform1f(program->getUniform("sigma"), sigma);
-	glUniform1f(program->getUniform("shininess"), shininess);
+  lightPos =  V *  lightPos;
+  //storing uniform variables
+  glUniform3fv(program->getUniform("lightPos"), 1, &lightPos[0]);
+  glUniform3fv(program->getUniform("ks"), 1, &ks[0]);
+  glUniform3fv(program->getUniform("lightColor"), 1, &lightCam->lightColor[0]);
+  glUniformMatrix4fv(program->getUniform("P"), 1, GL_FALSE, &P[0][0]);
+  glUniformMatrix4fv(program->getUniform("V"), 1, GL_FALSE, &V[0][0]);
+  glUniformMatrix4fv(program->getUniform("M"), 1, GL_FALSE, &M->topMatrix()[0][0]);
+  glUniformMatrix4fv(program->getUniform("MinvT"), 1, GL_FALSE, &M->topInvMatrix()[0][0]);
+  glUniformMatrix4fv(program->getUniform("LightPV"), 1, GL_FALSE, &LightPV[0][0]);
+  glUniform1i(program->getUniform("enableLighting"), true);
+  glUniform1i(program->getUniform("depthMap"), 1);
+  glUniform1f(program->getUniform("sigma"), sigma);
+  glUniform1f(program->getUniform("shininess"), shininess);
 }
