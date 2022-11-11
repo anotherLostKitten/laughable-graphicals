@@ -34,11 +34,13 @@ public:
   /* pointer to face at the left side */
   Face *leftFace;
 
+  double angleWithNext;
+
   /**
    * edge opposite head of this half edge cross the normal
    * (only makes sense for triangles)
    */
-  glm::vec3 ecn;
+  //glm::vec3 ecn;
 
   /**
    * this edge vector

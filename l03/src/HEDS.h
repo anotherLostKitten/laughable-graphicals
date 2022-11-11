@@ -118,7 +118,5 @@ public:
    */
   void computeLaplacian();
 
-  /** computes the angle between this he and the next */
-  double angleWithNext(HalfEdge *he);
 };
 #endif

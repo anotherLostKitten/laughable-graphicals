@@ -22,6 +22,13 @@ HEDS::HEDS(shared_ptr<PolygonSoup>soup){
 	  he1->head->n+=f->n;
 	  he2->head->n+=f->n;
 	  he3->head->n+=f->n;
+	  glm::vec3 e1=glm::normalize(he1->e);
+	  glm::vec3 e2=glm::normalize(he2->e);
+	  glm::vec3 e3=glm::normalize(he3->e);
+	  he1->angleWithNext=acos(glm::dot(-e1,e2));
+	  he2->angleWithNext=acos(glm::dot(-e2,e3));
+	  he3->angleWithNext=acos(glm::dot(-e3,e1));
+	  //cout<<he1->angleWithNext+he2->angleWithNext+he3->angleWithNext<<"\n";
 	}
   for(auto&v:*vertices)
 	v->n=glm::normalize(v->n);
@@ -33,6 +40,7 @@ HalfEdge*HEDS::createHalfEdge(shared_ptr<PolygonSoup>soup,unsigned int i,unsigne
   HalfEdge*he=new HalfEdge();
   he->head=soup->vertexList->at(j);
   he->head->he=he;//make sure the vertex has at least one half edge that points to it.
+  he->e=he->head->p-soup->vertexList->at(i)->p;
   auto twine=halfEdges->extract(p);
   if(twine){
 	he->twin=twine.mapped();
@@ -150,11 +158,4 @@ void HEDS::computeLaplacian(){
 	 */
         
   }
-}
-
-double HEDS::angleWithNext(HalfEdge*he){
-  /**
-   * TODO: 6 Implement this function to compute the angle with next edge... you'll want to use this in a few places.
-   */
-  return 0;
 }
