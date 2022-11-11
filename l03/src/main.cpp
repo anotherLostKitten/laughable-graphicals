@@ -443,6 +443,7 @@ static void render() {
 		selectedVertex=face->he->next->head;
 	  else
 		selectedVertex=face->he->next->next->head;
+	  cout<<"vert: "<<selectedVertex->p.x<<", "<<selectedVertex->p.y<<", "<<selectedVertex->p.z<<"\n";
 	  selectedVertex->constrained=true;
 	  selectedVertex->u0=1;
 	  selectedVertex->ut=1;
