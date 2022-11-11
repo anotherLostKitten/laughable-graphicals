@@ -17,35 +17,35 @@ using namespace std;
 class Face
 {
 public:
-    /** sure, why not keep a normal for flat shading? */
-    glm::vec3 n;
+  /** sure, why not keep a normal for flat shading? */
+  glm::vec3 n;
 
-    /** Some half edge on the face */
-    HalfEdge *he;
+  /** Some half edge on the face */
+  HalfEdge *he;
 
-    /** area of the face */
-    double area;
+  /** area of the face */
+  double area;
 
-    /** gradient of the quantities u at the vertices */
-    glm::vec3 gradu;
+  /** gradient of the quantities u at the vertices */
+  glm::vec3 gradu;
 
-    /** center of the face */
-    glm::vec3 c;
+  /** center of the face */
+  glm::vec3 c;
 
-    /**
-     * Constructs a face from a half edge, and computes the flat normal
-     * @param he
-     */
-    Face(HalfEdge *he);
+  /**
+   * Constructs a face from a half edge, and computes the flat normal
+   * @param he
+   */
+  Face(HalfEdge *he);
 
-    /**
-     * Computes the center of the face
-     */
-    void computeCenter();
+  /**
+   * Computes the center of the face
+   */
+  void computeCenter();
 
-    /**
-     * Computes the non-normalized normal vector
-     */
-    void computeNormal();
+  /**
+   * Computes the non-normalized normal vector
+   */
+  void computeNormal();
 };
 #endif
