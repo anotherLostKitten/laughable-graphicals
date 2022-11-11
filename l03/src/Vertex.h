@@ -40,7 +40,8 @@ public:
   double ut = 0;
 
   /** 1/3 area of surrounding faces */
-  double area = 0;
+  double area=0;
+  double invarea=0;
 
   /** divergence of the normalized gradient of u */
   double divX = 0;

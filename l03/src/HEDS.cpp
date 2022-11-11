@@ -33,6 +33,7 @@ HEDS::HEDS(shared_ptr<PolygonSoup>soup){
   for(auto&v:*vertices){
 	v->n=glm::normalize(v->n);
 	v->area*=1./3.;
+	v->invarea=1./v->area;
 	//cout<<"valence: "<<v->valence()<<"\n";
   }
 }
@@ -75,9 +76,18 @@ void HEDS::solveHeatFlowStep(int GSSteps,double t){
 	for(auto&v:*vertices){
 	  if(v->constrained)
 		continue; // do nothing for the constrained vertex!
+	  HalfEdge*he=v->he->twin;
+	  int j=0;
+	  double vls=0.;
+	  do{
+		givls+=he->head->ut*v->Lij[j++];
+		he=he->twin->next;
+	  }while(he!=v->he->twin);
+	  v->ut=(v->u0+vls*t)/(v->area-v->Lii*t);
 	  /**
-	   * TODO: 7 write inner loop code for the PGS heat solve.
+	   * TODO: 7 write inner loop code for the PGS heat solve. ?? maybe this is right?
 	   */
+	  
 	}
   }
 }
