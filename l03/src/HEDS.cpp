@@ -8,7 +8,9 @@ HEDS::HEDS(shared_ptr<PolygonSoup> soup)
     faces->clear();
     faces->reserve(soup->faceList.size());
     vertices = soup->vertexList;
-    for (auto &face : soup->faceList) {
+	for(auto&v:*vertices)
+	  v->n=glm::vec3(0,0,0);
+    for(auto&face:soup->faceList)
 	  for(int i=2;i<face.size();i++){
 		HalfEdge*he1=createHalfEdge(soup,face[0],face[i-1]);
 		HalfEdge*he2=createHalfEdge(soup,face[i-1],face[i]);
@@ -18,21 +20,16 @@ HEDS::HEDS(shared_ptr<PolygonSoup> soup)
 		he3->next=he1;
 		Face*f=new Face(he1);
 		(*faces).push_back(f);
+		he1->head->n+=f->n;
+		he2->head->n+=f->n;
+		he3->head->n+=f->n;
 	  }
-		/**
-		 * TODO: 2 Build the half edge data structure from the polygon soup, triangulating non-triangular faces.
-		 */
-    }
     // set vertex normals
-    for (auto &v : *vertices) {
-        v->n = glm::vec3(0, 0, 0);
-    }
-    for (auto &f : *faces) {
-        f->computeNormal();
-        /**
-         * TODO: 3 Compute vertex normals.
-         */
-    }
+
+    for(auto&v:*vertices){
+	  //v->n=glm::normalize(v->n);
+	  std::cout<<"normal: "<<v->n.x<<", "<<v->n.y<<", "<<v->n.z<<"\n";
+	}
 }
 
 HalfEdge *HEDS::createHalfEdge(shared_ptr<PolygonSoup> soup, unsigned int i, unsigned int j)
