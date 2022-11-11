@@ -25,6 +25,7 @@ HEDS::HEDS(shared_ptr<PolygonSoup>soup){
 	}
   for(auto&v:*vertices)
 	v->n=glm::normalize(v->n);
+  //for(auto&v:*vertices)cout<<"valence: "<<v->valence()<<"\n";
 }
 
 HalfEdge*HEDS::createHalfEdge(shared_ptr<PolygonSoup>soup,unsigned int i,unsigned int j){
