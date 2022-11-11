@@ -5,7 +5,7 @@
 #define HEDS_H
 
 #include <vector>
-#include <map>
+#include <unordered_map>
 #include <memory>
 #include <math.h>
 #include "Face.h"
@@ -55,7 +55,7 @@ public:
 	/**
 	 * Convenience map for keeping track of half edges you make or need
 	 */
-	shared_ptr<map<unsigned long int, HalfEdge *>> halfEdges = make_shared<map<unsigned long int, HalfEdge *>>();
+	shared_ptr<unordered_map<unsigned long int, HalfEdge *>> halfEdges = make_shared<unordered_map<unsigned long int, HalfEdge *>>();
 
 	/**
 	 * Helper function for creating a half edge, and pairing it up with its twin if
