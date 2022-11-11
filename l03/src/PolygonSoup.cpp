@@ -36,9 +36,28 @@ PolygonSoup::PolygonSoup(std::string filename)
 
         std::cout << soupStatistics;
 
-        /*
-         * TODO: 1 compute a bounding box and scale and center the geometry here
-         */
+		glm::vec3 max=(*vertexList)[0]->p;
+		glm::vec3 min=(*vertexList)[0]->p;
+		for(auto&vert:*vertexList){
+		  if(vert->p.x>max.x)
+			max.x=vert->p.x;
+		  if(vert->p.y>max.y)
+			max.y=vert->p.y;
+		  if(vert->p.z>max.z)
+			max.z=vert->p.z;
+		  if(vert->p.x < min.x)
+			min.x = vert->p.x;
+		  if(vert->p.y < min.y)
+			min.y = vert->p.y;
+		  if(vert->p.z < min.z)
+			min.z = vert->p.z;
+		}
+		std::cout << "min point: (" << min.x << ", " << min.y << ", " << min.z << ") max point: (" << max.x << ", " << max.y << ", " << max.z << ")\n";
+		glm::vec3 offset=(max+min)*-0.5f;
+		float scaleby=10.f/(max.x-min.x>max.y-min.y?(max.x-min.x>max.z-min.z?max.x-min.x:max.z-min.z):(max.y-min.y>max.z-min.z?max.y-min.y:max.z-min.z));
+		std::cout << "offset by: (" << offset.x << ", " << offset.y << ", " << offset.z << ") scaleby: " << scaleby << "\n";
+		for (auto &vert : *vertexList)
+		  vert->p=(vert->p+offset)*scaleby;
 
         // reserve buffer data
         this->norBuf.reserve(faceList.size() * 3);
