@@ -114,19 +114,13 @@ void HEDS::updateDivx(){
 }
 
 void HEDS::updateGradu(){
-  //cout<<"updating gradus\n";
-  // do a pass to compute face gradients of u with the current solution
   for(auto&f:*faces){
 	HalfEdge*he1=f->he;
 	HalfEdge*he2=he1->next;
 	HalfEdge*he3=he2->next;
-	f->gradu=glm::normalize(he1->head->ut_float*glm::cross(f->n,he3->e)+
-							he2->head->ut_float*glm::cross(f->n,he1->e)+
-							he3->head->ut_float*glm::cross(f->n,he2->e));
-	cout<<"gradient: "<<f->gradu.x<<", "<<f->gradu.y<<", "<<f->gradu.z<<"\n";
-	/**
-	 * TODO: 8 update the gradient of u from the heat values, i.e., f.gradu for each Face f.
-	 */
+	f->gradu=glm::normalize(he1->head->ut_float*glm::cross(he3->e,f->n)+
+							he2->head->ut_float*glm::cross(he1->e,f->n)+
+							he3->head->ut_float*glm::cross(he2->e,f->n));
   }
 }
 
