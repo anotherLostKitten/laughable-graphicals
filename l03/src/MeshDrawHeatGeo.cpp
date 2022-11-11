@@ -137,10 +137,10 @@ void MeshDrawHeatGeo::drawVBOs(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack
     aProgram->bind();
 
     glBindVertexArray(vao);
-
+	
     glUniformMatrix4fv(aProgram->getUniform("P"), 1, GL_FALSE, &P->topMatrix()[0][0]);
     glUniformMatrix4fv(aProgram->getUniform("MV"), 1, GL_FALSE, &MV->topMatrix()[0][0]);
-
+	
     const GLfloat lightCamSpacePosition[3] = {0, 20, 20};
     const GLfloat lightColor[3] = {1, 1, 1};
     const GLfloat materialDiffuse[3] = {0.3f, 0.3f, 0.3f};
@@ -149,7 +149,8 @@ void MeshDrawHeatGeo::drawVBOs(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack
     glUniform3fv(aProgram->getUniform("lightColor"), 1, lightColor);
     glUniform3fv(aProgram->getUniform("materialDiffuse"), 1, materialDiffuse);
     glUniform1f(aProgram->getUniform("materialShininess"), 255);
-    
+
+	GLSL::checkError(GET_FILE_LINE);
     /**
     * TODO: If you have extra uniforms / attributes in your shader, add them here also, example shown below
     */
@@ -161,9 +162,10 @@ void MeshDrawHeatGeo::drawVBOs(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack
 
     glEnableVertexAttribArray(camSpacePositionID);
     glEnableVertexAttribArray(camSpaceNormalID);
-    glEnableVertexAttribArray(utvID);
-    glEnableVertexAttribArray(phivID);
-
+	GLSL::checkError(GET_FILE_LINE);
+    //glEnableVertexAttribArray(utvID);
+    //glEnableVertexAttribArray(phivID);
+	GLSL::checkError(GET_FILE_LINE);
     glBindBuffer(GL_ARRAY_BUFFER, pvdVBOID);
     glVertexAttribPointer(camSpacePositionID, 3, GL_FLOAT, false, pvdStrideBytes, (void *)(0 * 4)); // last parameter is byte offset
     glVertexAttribPointer(camSpaceNormalID, 3, GL_FLOAT, false, pvdStrideBytes, (void *)(3 * 4));
@@ -171,19 +173,19 @@ void MeshDrawHeatGeo::drawVBOs(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack
     fillDynamicVBO(); // refill the vertex data for heat diffusion info
     glBindBuffer(GL_ARRAY_BUFFER, dvdVBOID);
     glBufferSubData(GL_ARRAY_BUFFER, 0, dvdStrideBytes * pvdCount, dvdBuffer); // use substitution
-    glVertexAttribPointer(utvID, 1, GL_FLOAT, false, dvdStrideBytes, (void *)(0 * 4)); // last parameter is byte offset
-    glVertexAttribPointer(phivID, 1, GL_FLOAT, false, dvdStrideBytes, (void *)(1 * 4));
-
+    //glVertexAttribPointer(utvID, 1, GL_FLOAT, false, dvdStrideBytes, (void *)(0 * 4)); // last parameter is byte offset
+    //glVertexAttribPointer(phivID, 1, GL_FLOAT, false, dvdStrideBytes, (void *)(1 * 4));
+	GLSL::checkError(GET_FILE_LINE);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexVBOID);
     glDrawElements(GL_TRIANGLES, heds->faces->size() * 3, GL_UNSIGNED_INT, 0);
-
+	GLSL::checkError(GET_FILE_LINE);
     glDisableVertexAttribArray(camSpacePositionID);
     glDisableVertexAttribArray(camSpaceNormalID);
-    glDisableVertexAttribArray(utvID);
-    glDisableVertexAttribArray(phivID);
-
+    //glDisableVertexAttribArray(utvID);
+    //glDisableVertexAttribArray(phivID);
+	
     glBindBuffer(GL_ARRAY_BUFFER, 0);
-
+	GLSL::checkError(GET_FILE_LINE);
     aProgram->unbind();
 }
 

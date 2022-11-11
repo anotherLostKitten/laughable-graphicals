@@ -294,7 +294,7 @@ static void init() {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_LINE_SMOOTH);
-	glEnable(GL_POLYGON_SMOOTH);
+	//glEnable(GL_POLYGON_SMOOTH);
 
 	progCol = make_shared<Program>();
 	progCol->setVerbose(true);
@@ -401,6 +401,7 @@ static void render() {
 	} else {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); // set polygons to render filled.
 	}
+	GLSL::checkError(GET_FILE_LINE);
 
 	// restart heat simulation
 	if (restartHeatRequest == true) {
@@ -447,7 +448,7 @@ static void render() {
 			selectedVertex->ut = 1;
 		}
 	}
-
+	GLSL::checkError(GET_FILE_LINE);
 	// draw HEDS mesh
 	if (drawHEDSMesh) {
 		if (drawPicking) {
@@ -456,6 +457,7 @@ static void render() {
 			meshDraw.drawVBOs(P, MV);
 		}
 	}
+	GLSL::checkError(GET_FILE_LINE);
 
 	// draw soup wireframe
 	if (drawPolySoup) {

@@ -2,8 +2,8 @@
 
 in vec3 camSpacePosition;
 in vec3 camSpaceNormal;
-in float utv;
-in float phiv;
+//in float utv;
+//in float phiv;
 
 out vec4 out_fragColor;
 
@@ -21,5 +21,6 @@ void main(void) {
 	// TODO: 4, 7, 11 Implement your GLSL per fragement lighting, heat colouring, and distance stripes here!
 
 	// can use this to initially visualize the normal	
-    out_fragColor =  clamp( vec4( n.xyz * 0.5 + vec3( 0.5, 0.5,0.5 ), 0.5 + utv + phiv ), 0, 1 );
+    // out_fragColor =  clamp( vec4( n.xyz * 0.5 + vec3( 0.5, 0.5,0.5 ), 0.5 + utv + phiv ), 0, 1 );
+	out_fragColor =  clamp( vec4( n.xyz * 0.5 + vec3( 0.5, 0.5,0.5 ), 0.8), 0, 1 );
 }
