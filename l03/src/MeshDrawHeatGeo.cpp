@@ -163,7 +163,7 @@ void MeshDrawHeatGeo::drawVBOs(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack
   glEnableVertexAttribArray(camSpacePositionID);
   glEnableVertexAttribArray(camSpaceNormalID);
   GLSL::checkError(GET_FILE_LINE);
-  //glEnableVertexAttribArray(utvID);
+  glEnableVertexAttribArray(utvID);
   //glEnableVertexAttribArray(phivID);
   GLSL::checkError(GET_FILE_LINE);
   glBindBuffer(GL_ARRAY_BUFFER, pvdVBOID);
@@ -173,7 +173,7 @@ void MeshDrawHeatGeo::drawVBOs(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack
   fillDynamicVBO(); // refill the vertex data for heat diffusion info
   glBindBuffer(GL_ARRAY_BUFFER, dvdVBOID);
   glBufferSubData(GL_ARRAY_BUFFER, 0, dvdStrideBytes * pvdCount, dvdBuffer); // use substitution
-  //glVertexAttribPointer(utvID, 1, GL_FLOAT, false, dvdStrideBytes, (void *)(0 * 4)); // last parameter is byte offset
+  glVertexAttribPointer(utvID, 1, GL_FLOAT, false, dvdStrideBytes, (void *)(0 * 4)); // last parameter is byte offset
   //glVertexAttribPointer(phivID, 1, GL_FLOAT, false, dvdStrideBytes, (void *)(1 * 4));
   GLSL::checkError(GET_FILE_LINE);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexVBOID);
@@ -181,7 +181,7 @@ void MeshDrawHeatGeo::drawVBOs(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack
   GLSL::checkError(GET_FILE_LINE);
   glDisableVertexAttribArray(camSpacePositionID);
   glDisableVertexAttribArray(camSpaceNormalID);
-  //glDisableVertexAttribArray(utvID);
+  glDisableVertexAttribArray(utvID);
   //glDisableVertexAttribArray(phivID);
 	
   glBindBuffer(GL_ARRAY_BUFFER, 0);

@@ -37,7 +37,8 @@ public:
   double u0 = 0;
 
   /** Heat value */
-  double ut = 0;
+  double ut=0.;
+  float ut_float=0.f;
 
   /** 1/3 area of surrounding faces */
   double area=0;

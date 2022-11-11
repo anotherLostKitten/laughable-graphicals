@@ -67,6 +67,7 @@ void HEDS::initHeatFlow(){
 }
 
 void HEDS::solveHeatFlowStep(int GSSteps,double t){
+  //cout<<"updating steps\n";
   // we'll naively choose some random vertex as a source, and
   // then do lots of GS iterations on that for a backward Euler solve of
   // (A-tL) u_t = u_0
@@ -76,18 +77,15 @@ void HEDS::solveHeatFlowStep(int GSSteps,double t){
 	for(auto&v:*vertices){
 	  if(v->constrained)
 		continue; // do nothing for the constrained vertex!
-	  HalfEdge*he=v->he->twin;
+	  HalfEdge*he=v->he->twin,*end=v->he->twin;
 	  int j=0;
 	  double vls=0.;
 	  do{
-		givls+=he->head->ut*v->Lij[j++];
+		vls+=he->head->ut*v->Lij[j++];
 		he=he->twin->next;
-	  }while(he!=v->he->twin);
+	  }while(he!=end);
 	  v->ut=(v->u0+vls*t)/(v->area-v->Lii*t);
-	  /**
-	   * TODO: 7 write inner loop code for the PGS heat solve. ?? maybe this is right?
-	   */
-	  
+	  v->ut_float=(float)v->ut;
 	}
   }
 }
@@ -117,11 +115,14 @@ void HEDS::updateDivx(){
 }
 
 void HEDS::updateGradu(){
+  //cout<<"updating gradus\n";
   // do a pass to compute face gradients of u with the current solution
   for(auto&f:*faces){
-	f->gradu[0]=0;
-	f->gradu[1]=0;
-	f->gradu[2]=0;
+	HalfEdge*he1=f->he,*he2=f->he->next,*he3=f->he->next->next;
+	f->gradu=glm::normalize(he1->head->ut_float*glm::cross(f->n,he3->e)+
+							he2->head->ut_float*glm::cross(f->n,he1->e)+
+							he3->head->ut_float*glm::cross(f->n,he2->e));
+	
 	/**
 	 * TODO: 8 update the gradient of u from the heat values, i.e., f.gradu for each Face f.
 	 */

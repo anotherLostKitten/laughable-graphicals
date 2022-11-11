@@ -5,29 +5,18 @@
 
 using namespace std;
 
-Face::Face(HalfEdge *he)
-{
-  this->he = he;
-  HalfEdge *loop = he;
-  do
-    {
-	  loop->leftFace = this;
-	  loop = loop->next;
-    } while (loop != he);
+Face::Face(HalfEdge*he){
+  this->he=he;
+  HalfEdge*loop=he;
+  c=glm::vec3(0,0,0);
+  do{
+	loop->leftFace=this;
+	loop=loop->next;
+	c+=loop->head->p;
+  }while(loop!=he);
+  c*=1./3.;
+  gradu=glm::vec3(0,0,0);
   computeNormal();
-  computeCenter();
-}
-
-void Face::computeCenter()
-{
-  c = glm::vec3(0, 0, 0);
-  HalfEdge *loop = he;
-  do
-    {
-	  c += loop->head->p;
-	  loop = loop->next;
-    } while (loop != he);
-  c *= (1.0 / 3.0);
 }
 
 void Face::computeNormal(){

@@ -2,8 +2,8 @@
 
 in vec3 camSpacePosition;
 in vec3 camSpaceNormal;
-//in float utv;
-//in float phiv;
+in float utv;
+in float phiv;
 
 out vec4 out_fragColor;
 
@@ -18,7 +18,7 @@ void main(void) {
   vec3 n = normalize(camSpaceNormal);
   vec3 l = normalize(lightCamSpacePosition - camSpacePosition);
 
-  // TODO: 7, 11 Implement your GLSL heat colouring, and distance stripes here!
+  // TODO: 11 Implement your GLSL distance stripes here!
 
   float diffuse=max(dot(n,v),0);
   float specular=0.0;
@@ -27,11 +27,8 @@ void main(void) {
 	specular=max(0,dot(n,hv));
 	specular=pow(specular,materialShininess);
   }
-  vec3 diffLight=(n.xyz*0.3+vec3(0.7, 0.7,0.7))*diffuse;
+  vec3 diffLight=clamp(vec3(141+110*utv,205-50*utv,197-22*utv)/256,0,1)*diffuse;
   vec3 specLight=lightColor*specular;
 
   out_fragColor=clamp(vec4(diffLight+specLight,1),0,1);
-  // can use this to initially visualize the normal
-  // out_fragColor =  clamp( vec4( n.xyz * 0.5 + vec3( 0.5, 0.5,0.5 ), 0.5 + utv + phiv ), 0, 1 );
-  // out_fragColor =  clamp( vec4( n.xyz * 0.5 + vec3( 0.5, 0.5,0.5 ), 1), 0, 1 );
 }
