@@ -22,13 +22,10 @@ HEDS::HEDS(shared_ptr<PolygonSoup>soup){
 	  he1->head->n+=f->n;
 	  he2->head->n+=f->n;
 	  he3->head->n+=f->n;
-	  glm::vec3 e1=glm::normalize(he1->e);
-	  glm::vec3 e2=glm::normalize(he2->e);
-	  glm::vec3 e3=glm::normalize(he3->e);
-	  he1->angleWithNext=acos(glm::dot(-e1,e2));
-	  he2->angleWithNext=acos(glm::dot(-e2,e3));
-	  he3->angleWithNext=acos(glm::dot(-e3,e1));
-	  //cout<<he1->angleWithNext+he2->angleWithNext+he3->angleWithNext<<"\n";
+	  double crs=2.*f->area;
+	  he1->cwn=glm::dot(-he1->e,he2->e)/crs;
+	  he2->cwn=glm::dot(-he2->e,he3->e)/crs;
+	  he3->cwn=glm::dot(-he3->e,he1->e)/crs;
 	}
   for(auto&v:*vertices)
 	v->n=glm::normalize(v->n);

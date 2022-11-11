@@ -31,11 +31,8 @@ void Face::computeCenter()
 }
 
 void Face::computeNormal(){
-  glm::vec3 p0=he->head->p;
-  glm::vec3 p1=he->next->head->p;
-  glm::vec3 p2=he->next->next->head->p;
-  glm::vec3 v1=p1-p0;
-  glm::vec3 v2=p2-p1;
+  glm::vec3 v1=he->e;
+  glm::vec3 v2=he->next->e;
   n=glm::cross(v1,v2);
   area=0.5*glm::length(n);
   if(area>0.f)

@@ -34,7 +34,7 @@ public:
   /* pointer to face at the left side */
   Face *leftFace;
 
-  double angleWithNext;
+  double cwn;
 
   /**
    * edge opposite head of this half edge cross the normal
