@@ -35,6 +35,13 @@ void Face::computeNormal(){
   glm::vec3 v2=he->next->e;
   n=glm::cross(v1,v2);
   area=0.5*glm::length(n);
-  if(area>0.f)
+  if(area>0.)
 	n=glm::normalize(n);
+}
+
+void Face::printFace(){
+  cout<<"v01 ("<<he->head->p.x<<", "<<he->head->p.y<<", "<<he->head->p.z<<")\n";
+  cout<<"v02 ("<<he->next->head->p.x<<", "<<he->next->head->p.y<<", "<<he->next->head->p.z<<")\n";
+  cout<<"v03 ("<<he->next->next->head->p.x<<", "<<he->next->next->head->p.y<<", "<<he->next->next->head->p.z<<")\n";
+  cout<<"area: "<<area<<"; normal ("<<n.x<<", "<<n.y<<", "<<n.z<<")\n";
 }

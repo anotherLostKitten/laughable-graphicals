@@ -47,5 +47,6 @@ public:
    * Computes the non-normalized normal vector
    */
   void computeNormal();
+  void printFace();
 };
 #endif

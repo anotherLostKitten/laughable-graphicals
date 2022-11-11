@@ -423,31 +423,31 @@ static void render() {
 
   // select point
   glm::vec3 BBC;
-  if (selectRequest)
-	{
-	  selectRequest = false;
-	  int ID = meshPicking.pickTriangles(&clickPoint, &BBC, window, P, MV, progCol);
-	  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	  cout << "ID = " << ID << " BBC = " << BBC.x << ", " << BBC.y << ", " << BBC.z << endl;
-	  if (ID >= 0) {
-		// clear the constrained vertices
-		for (auto &v : *(heds->vertices)) {
-		  v->constrained = false;
-		  v->u0 = 0;
-		}
-		// choose the closest vertex based on the barycentric coordinates
-		if (BBC.x > BBC.y && BBC.x > BBC.z) {
-		  selectedVertex = heds->faces->at(ID)->he->head;
-		} else if (BBC.y > BBC.x && BBC.y > BBC.z) {
-		  selectedVertex = heds->faces->at(ID)->he->next->head;
-		} else {
-		  selectedVertex = heds->faces->at(ID)->he->next->next->head;
-		}
-		selectedVertex->constrained = true;
-		selectedVertex->u0 = 1;
-		selectedVertex->ut = 1;
+  if(selectRequest){
+	selectRequest=false;
+	int ID=meshPicking.pickTriangles(&clickPoint,&BBC,window,P,MV,progCol);
+	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+	cout<<"ID = "<<ID<<" BBC = "<<BBC.x<<", "<<BBC.y<<", "<<BBC.z<<endl;
+	if(ID>=0){
+	  // clear the constrained vertices
+	  for(auto&v:*(heds->vertices)){
+		v->constrained=false;
+		v->u0=0;
 	  }
+	  // choose the closest vertex based on the barycentric coordinates
+	  Face*face=heds->faces->at(ID);
+	  face->printFace();
+	  if(BBC.x>BBC.y&&BBC.x>BBC.z)
+		selectedVertex=face->he->head;
+	  else if(BBC.y>BBC.x&&BBC.y>BBC.z)
+		selectedVertex=face->he->next->head;
+	  else
+		selectedVertex=face->he->next->next->head;
+	  selectedVertex->constrained=true;
+	  selectedVertex->u0=1;
+	  selectedVertex->ut=1;
 	}
+  }
   GLSL::checkError(GET_FILE_LINE);
   // draw HEDS mesh
   if (drawHEDSMesh) {
