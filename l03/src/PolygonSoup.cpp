@@ -1,3 +1,5 @@
+//theodore peters 260919785
+
 #include "PolygonSoup.h"
 
 PolygonSoup::PolygonSoup(std::string filename)

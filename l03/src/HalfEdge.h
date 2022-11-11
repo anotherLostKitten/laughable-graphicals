@@ -1,3 +1,5 @@
+//theodore peters 260919785
+
 #pragma once
 #ifndef HalfEdge_H
 #define HalfEdge_H
