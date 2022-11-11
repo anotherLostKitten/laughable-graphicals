@@ -55,7 +55,7 @@ public:
 	/**
 	 * Convenience map for keeping track of half edges you make or need
 	 */
-	shared_ptr<map<string, HalfEdge *>> halfEdges = make_shared<map<string, HalfEdge *>>();
+	shared_ptr<map<unsigned long int, HalfEdge *>> halfEdges = make_shared<map<unsigned long int, HalfEdge *>>();
 
 	/**
 	 * Helper function for creating a half edge, and pairing it up with its twin if
@@ -66,7 +66,7 @@ public:
 	 * @param j index of the second vertex
 	 * @return HalfEdge* pointer to the new HalfEdge object
 	 */
-	HalfEdge *createHalfEdge(shared_ptr<PolygonSoup> soup, int i, int j);
+	HalfEdge *createHalfEdge(shared_ptr<PolygonSoup> soup, unsigned int i, unsigned int j);
 
 	/// The rest of this is about heat flow
 

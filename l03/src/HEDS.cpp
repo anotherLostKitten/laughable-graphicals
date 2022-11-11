@@ -9,6 +9,16 @@ HEDS::HEDS(shared_ptr<PolygonSoup> soup)
     faces->reserve(soup->faceList.size());
     vertices = soup->vertexList;
     for (auto &face : soup->faceList) {
+	  for(int i=2;i<face.size();i++){
+		HalfEdge*he1=createHalfEdge(soup,face[0],face[i-1]);
+		HalfEdge*he2=createHalfEdge(soup,face[i-1],face[i]);
+		HalfEdge*he3=createHalfEdge(soup,face[i],face[0]);
+		he1->next=he2;
+		he2->next=he3;
+		he3->next=he1;
+		Face*f=new Face(he1);
+		(*faces).push_back(f);
+	  }
 		/**
 		 * TODO: 2 Build the half edge data structure from the polygon soup, triangulating non-triangular faces.
 		 */
@@ -25,13 +35,13 @@ HEDS::HEDS(shared_ptr<PolygonSoup> soup)
     }
 }
 
-HalfEdge *HEDS::createHalfEdge(shared_ptr<PolygonSoup> soup, int i, int j)
+HalfEdge *HEDS::createHalfEdge(shared_ptr<PolygonSoup> soup, unsigned int i, unsigned int j)
 {
-    std::string p = to_string(i) + "," + to_string(j);
+  unsigned long int p=((unsigned long int)i<<32)+j;
     if (halfEdges->count(p) > 0) {
         throw runtime_error("non orientable manifold");
     }
-    std::string twin = to_string(j) + "," + to_string(i);
+	unsigned long int twin=((unsigned long int)j<<32)+i;
     HalfEdge *he = new HalfEdge();
     he->head = soup->vertexList->at(j);
     he->head->he = he; // make sure the vertex has at least one half edge that points to it.
