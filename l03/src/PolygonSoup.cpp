@@ -56,7 +56,7 @@ PolygonSoup::PolygonSoup(std::string filename)
 	  }
 	  //std::cout << "min point: (" << min.x << ", " << min.y << ", " << min.z << ") max point: (" << max.x << ", " << max.y << ", " << max.z << ")\n";
 	  glm::vec3 offset=(max+min)*-0.5f;
-	  float scaleby=10.f/(max.x-min.x>max.y-min.y?(max.x-min.x>max.z-min.z?max.x-min.x:max.z-min.z):(max.y-min.y>max.z-min.z?max.y-min.y:max.z-min.z));
+	  float scaleby=20.f/(max.x-min.x>max.y-min.y?(max.x-min.x>max.z-min.z?max.x-min.x:max.z-min.z):(max.y-min.y>max.z-min.z?max.y-min.y:max.z-min.z));
 	  //std::cout << "offset by: (" << offset.x << ", " << offset.y << ", " << offset.z << ") scaleby: " << scaleby << "\n";
 	  for (auto &vert : *vertexList)
 		vert->p=(vert->p+offset)*scaleby;

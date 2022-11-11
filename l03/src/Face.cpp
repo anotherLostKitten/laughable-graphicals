@@ -1,6 +1,7 @@
 //theodore peters 260919785
 
 #include "Face.h"
+#include <iostream>
 
 using namespace std;
 
@@ -29,16 +30,14 @@ void Face::computeCenter()
   c *= (1.0 / 3.0);
 }
 
-void Face::computeNormal()
-{
-  glm::vec3 p0 = he->head->p;
-  glm::vec3 p1 = he->next->head->p;
-  glm::vec3 p2 = he->next->next->head->p;
-  glm::vec3 v1;
-  glm::vec3 v2;
-  v1 = p1 - p0;
-  v2 = p2 - p1;
-  n = glm::cross(v1, v2);
-  area = 0.5 * n.length();
-  n = glm::normalize(n);
+void Face::computeNormal(){
+  glm::vec3 p0=he->head->p;
+  glm::vec3 p1=he->next->head->p;
+  glm::vec3 p2=he->next->next->head->p;
+  glm::vec3 v1=p1-p0;
+  glm::vec3 v2=p2-p1;
+  n=glm::cross(v1,v2);
+  area=0.5*glm::length(n);
+  if(area>0.f)
+	n=glm::normalize(n);
 }

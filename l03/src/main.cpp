@@ -84,7 +84,7 @@ HalfEdge *currentHE;
 int whichSoup = 0;
 
 /* number of soups */
-const int numSoups = 13;
+const int numSoups = 16;
 /* all soups, feel free to add your own, but control the size */
 string soupFiles[numSoups] = {
   "bunnyLowRes.obj",
@@ -99,10 +99,10 @@ string soupFiles[numSoups] = {
   "Sphere.obj",
   "torus.obj",
   "torusSmall.obj",
-  //"human.obj",			// quads
-  //"werewolf.obj",		// quads
+  "human.obj",			// quads
+  "werewolf.obj",		// quads
   "bunny.obj",			// big challenge
-  //"better_dragon.obj",	// ultimate challenge
+  "better_dragon.obj",	// ultimate challenge
 };
 
 /* restart the heat */
