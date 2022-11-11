@@ -106,7 +106,16 @@ void HEDS::precomputeQuantities(){
 void HEDS::updateDivx(){
   // Compute the divergence of these normalized grad u vectors, at vertex locations
   for(auto &v:*vertices){
-	v->divX=0;
+	HalfEdge*he=v->he,*end=v->he;
+	double vls=0.;
+	do{
+	  glm::vec3 grd=he->leftFace->gradu;
+	  HalfEdge*oth=he->next;
+	  vls+=oth->next->cwn*glm::dot(oth->e,grd)-oth->cwn*glm::dot(he->e,grd);
+	  he=oth->twin;
+	}while(he!=end);
+	v->divX=vls*0.5;
+
 	/**
 	 * TODO: 9 Update the divergence of the normalized gradients, ie., v.divX for each Vertex v.
 	 */
