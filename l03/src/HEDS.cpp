@@ -33,8 +33,8 @@ HEDS::HEDS(shared_ptr<PolygonSoup>soup){
   for(auto&v:*vertices){
 	v->n=glm::normalize(v->n);
 	v->area*=1./3.;
+	//cout<<"valence: "<<v->valence()<<"\n";
   }
-  //for(auto&v:*vertices)cout<<"valence: "<<v->valence()<<"\n";
 }
 
 HalfEdge*HEDS::createHalfEdge(shared_ptr<PolygonSoup>soup,unsigned int i,unsigned int j){
@@ -87,13 +87,13 @@ void HEDS::precomputeQuantities(){
    * TODO: you can do some pre-computation here to make things faster!
    */
 
-  for(auto&f:*faces){
-	HalfEdge*he=f->he;
-  }
+  //for(auto&f:*faces){
+  //HalfEdge*he=f->he;
+  //}
 
-  for(auto &v:*vertices){
-	v->divX=0;
-  }
+  //for(auto &v:*vertices){
+  //v->divX=0;
+  //}
 }
 
 void HEDS::updateDivx(){
@@ -149,15 +149,16 @@ void HEDS::solveDistanceStep(int GSSteps){
 
 void HEDS::computeLaplacian(){
   for(auto&v:*vertices){
-	v->area=0;
-	v->Lii=0;
-	// get degree of v
+	v->Lii=0.;
 	int degree=v->valence();
 	v->Lij=new double[degree];
-
-	/**
-	 * TODO: 6 Compute the Laplacian and store as vertex weights, and cotan operator diagonal Lii and off diagonal Lij terms. 
-	 */
-        
+	HalfEdge*he=v->he;
+	for(int i=0;i<degree;i++){
+	  double cots=(he->next->cwn+he->twin->next->cwn)/2.;
+	  v->Lii-=cots;
+	  v->Lij[i]=cots;
+	  he=he->next->twin;
+	}
+	//cout<<"Lii: "<<v->Lii<<" Lij[0]: "<<v->Lij[0]<<"\n";
   }
 }

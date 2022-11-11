@@ -4,15 +4,17 @@
 #ifndef Vertex_H
 #define Vertex_H
 #include <memory>
+#include <iostream>
 #include "GLHeaders.h"
+
+using namespace std;
 
 class HalfEdge;
 
 /**
  * Simple vertex class
  */
-class Vertex
-{
+class Vertex{
 public:
   /** We must know the vertex index when assembling openGL buffers */
   int index;
