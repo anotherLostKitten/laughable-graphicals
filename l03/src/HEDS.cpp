@@ -33,7 +33,6 @@ HEDS::HEDS(shared_ptr<PolygonSoup>soup){
   for(auto&v:*vertices){
 	v->n=glm::normalize(v->n);
 	v->area*=1./3.;
-	v->invarea=1./v->area;
 	//cout<<"valence: "<<v->valence()<<"\n";
   }
 }
@@ -67,15 +66,10 @@ void HEDS::initHeatFlow(){
 }
 
 void HEDS::solveHeatFlowStep(int GSSteps,double t){
-  // we'll naively choose some random vertex as a source, and
-  // then do lots of GS iterations on that for a backward Euler solve of
-  // (A-tL) u_t = u_0
-
-  // what is a good value of t?  t small for accuracy, but t large for possibly floating point error
   for(int i=0;i<GSSteps;i++){
 	for(auto&v:*vertices){
 	  if(v->constrained)
-		continue; // do nothing for the constrained vertex!
+		continue;
 	  HalfEdge*he=v->he->twin,*end=v->he->twin;
 	  int j=0;
 	  double vls=0.;
@@ -93,18 +87,9 @@ void HEDS::precomputeQuantities(){
   /**
    * TODO: you can do some pre-computation here to make things faster!
    */
-
-  //for(auto&f:*faces){
-  //HalfEdge*he=f->he;
-  //}
-
-  //for(auto &v:*vertices){
-  //v->divX=0;
-  //}
 }
 
 void HEDS::updateDivx(){
-  // Compute the divergence of these normalized grad u vectors, at vertex locations
   for(auto &v:*vertices){
 	HalfEdge*he=v->he,*end=v->he;
 	double vls=0.;
@@ -117,7 +102,7 @@ void HEDS::updateDivx(){
 	v->divX=vls*0.5;
 
 	/**
-	 * TODO: 9 Update the divergence of the normalized gradients, ie., v.divX for each Vertex v.
+	 * TODO: 9 Update the divergence of the normalized gradients, ie., v.divX for each Vertex v. ???
 	 */
   }
 }
@@ -127,9 +112,8 @@ void HEDS::updateGradu(){
 	HalfEdge*he1=f->he;
 	HalfEdge*he2=he1->next;
 	HalfEdge*he3=he2->next;
-	f->gradu=glm::normalize(he1->head->ut_float*glm::cross(he3->e,f->n)+
-							he2->head->ut_float*glm::cross(he1->e,f->n)+
-							he3->head->ut_float*glm::cross(he2->e,f->n));
+	glm::vec3 val=glm::normalize(he1->head->ut_float*glm::cross(he3->e,f->n)+he2->head->ut_float*glm::cross(he1->e,f->n)+he3->head->ut_float*glm::cross(he2->e,f->n));
+	if(val.x==val.x)f->gradu=val;
   }
 }
 
@@ -137,8 +121,23 @@ void HEDS::solveDistanceStep(int GSSteps){
   // Finally step the solution to the distance problem
   for(int i=0;i<GSSteps;i++){
 	for(auto&v:*vertices){
+	  
+	  HalfEdge*he=v->he->twin,*end=v->he->twin;
+	  int j=0;
+	  double vls=v->divX;
+	  cout<<"vls: "<<vls<<". ";
+	  do{
+		vls-=v->Lij[j++]*he->head->phi;
+		he=he->twin->next;
+	  }while(he!=end);
+	  vls/=v->Lii;
+	  if(vls==vls)v->phi=vls;
+	  cout<<"phi: "<<v->phi<<"\n";
+	  
 	  // LHS matrix is L, so to take all the LHS to the RSH for one variable we get
 	  // Lii phi_i = div X + sum_{j!=i} tLij phi_j
+	  
+	  
 	  /**
 	   * TODO: 10 Implement the inner loop of the Gauss-Seidel solve to compute the distances to each vertex, phi.
 	   */

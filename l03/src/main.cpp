@@ -295,6 +295,7 @@ static void init() {
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glEnable(GL_LINE_SMOOTH);
   //glEnable(GL_POLYGON_SMOOTH);
+  GLSL::checkError(GET_FILE_LINE);
 
   progCol = make_shared<Program>();
   progCol->setVerbose(true);
@@ -315,6 +316,7 @@ static void init() {
   progPick->addAttribute("vertex");
   progPick->addAttribute("color");
   progPick->setVerbose(false);
+  GLSL::checkError(GET_FILE_LINE);
 
   progHeat = make_shared<Program>();
   progHeat->setVerbose(true);
@@ -323,8 +325,14 @@ static void init() {
   progHeat->addUniform("P");
   progHeat->addUniform("MV");
   progHeat->addUniform("lightCamSpacePosition");
+  GLSL::checkError(GET_FILE_LINE);
+  
   progHeat->addUniform("lightColor");
+  GLSL::checkError(GET_FILE_LINE);
+	
   progHeat->addUniform("materialDiffuse");
+  GLSL::checkError(GET_FILE_LINE);
+
   progHeat->addUniform("materialShininess");
   progHeat->addAttribute("vertex");
   progHeat->addAttribute("normal");
@@ -333,12 +341,15 @@ static void init() {
   progHeat->setVerbose(false);
 
   loadMesh(RES_DIR + soupFiles[0]);
+  GLSL::checkError(GET_FILE_LINE);
 
   // mesh picking init
   meshPicking.init(progPick);
-
+  GLSL::checkError(GET_FILE_LINE);
+	
   // mesh draw init
   meshDraw.init(progHeat);
+  GLSL::checkError(GET_FILE_LINE);
 
   // Create a buffers for doing some line drawing
   glGenVertexArrays(1, &vao);

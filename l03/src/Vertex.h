@@ -34,24 +34,23 @@ public:
   double *Lij;
 
   /** Heat value */
-  double u0 = 0;
+  double u0=0.;
 
   /** Heat value */
   double ut=0.;
   float ut_float=0.f;
 
   /** 1/3 area of surrounding faces */
-  double area=0;
-  double invarea=0;
+  double area=0.;
 
   /** divergence of the normalized gradient of u */
-  double divX = 0;
+  double divX=0.;
 
   /** distance */
-  double phi = 0;
+  double phi=0.;
 
   /** For setting boundary conditions */
-  bool constrained = false;
+  bool constrained=false;
 
   /**
    * @return valence of the vertex 

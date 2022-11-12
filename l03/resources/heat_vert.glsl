@@ -16,7 +16,8 @@ uniform mat4 MV;
 uniform vec3 lightCamSpacePosition;
 uniform vec3 lightColor;
 uniform vec3 materialDiffuse;
-uniform float materialShininess; 
+uniform float materialShininess;
+uniform float maxPhi;
 
 void main() {	
 	vec4 csp = MV * vec4( vertex, 1 );

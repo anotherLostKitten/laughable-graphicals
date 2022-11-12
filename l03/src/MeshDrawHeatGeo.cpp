@@ -154,17 +154,17 @@ void MeshDrawHeatGeo::drawVBOs(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack
   /**
    * TODO: If you have extra uniforms / attributes in your shader, add them here also, example shown below
    */
-  //int maxPhiPos = aProgram->getUniform("maxPhi");
-  //if (maxPhiPos >= 0)
-  //{
-  //    glUniform1f(maxPhiPos, ((float)heds->maxphi) / 300.f);
-  //}
+  int maxPhiPos=aProgram->getUniform("maxPhi");
+  if(maxPhiPos>=0)
+	glUniform1f(maxPhiPos,((float)heds->maxphi)/300.f);
 
+  cout<<"max phi "<<((float)heds->maxphi)<<"\n";
+  
   glEnableVertexAttribArray(camSpacePositionID);
   glEnableVertexAttribArray(camSpaceNormalID);
   GLSL::checkError(GET_FILE_LINE);
   glEnableVertexAttribArray(utvID);
-  //glEnableVertexAttribArray(phivID);
+  glEnableVertexAttribArray(phivID);
   GLSL::checkError(GET_FILE_LINE);
   glBindBuffer(GL_ARRAY_BUFFER, pvdVBOID);
   glVertexAttribPointer(camSpacePositionID, 3, GL_FLOAT, false, pvdStrideBytes, (void *)(0 * 4)); // last parameter is byte offset
@@ -174,7 +174,7 @@ void MeshDrawHeatGeo::drawVBOs(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack
   glBindBuffer(GL_ARRAY_BUFFER, dvdVBOID);
   glBufferSubData(GL_ARRAY_BUFFER, 0, dvdStrideBytes * pvdCount, dvdBuffer); // use substitution
   glVertexAttribPointer(utvID, 1, GL_FLOAT, false, dvdStrideBytes, (void *)(0 * 4)); // last parameter is byte offset
-  //glVertexAttribPointer(phivID, 1, GL_FLOAT, false, dvdStrideBytes, (void *)(1 * 4));
+  glVertexAttribPointer(phivID, 1, GL_FLOAT, false, dvdStrideBytes, (void *)(1 * 4));
   GLSL::checkError(GET_FILE_LINE);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexVBOID);
   glDrawElements(GL_TRIANGLES, heds->faces->size() * 3, GL_UNSIGNED_INT, 0);
@@ -182,7 +182,7 @@ void MeshDrawHeatGeo::drawVBOs(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack
   glDisableVertexAttribArray(camSpacePositionID);
   glDisableVertexAttribArray(camSpaceNormalID);
   glDisableVertexAttribArray(utvID);
-  //glDisableVertexAttribArray(phivID);
+  glDisableVertexAttribArray(phivID);
 	
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   GLSL::checkError(GET_FILE_LINE);

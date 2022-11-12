@@ -10,7 +10,8 @@ out vec4 out_fragColor;
 uniform vec3 lightCamSpacePosition;
 uniform vec3 lightColor;
 uniform vec3 materialDiffuse;
-uniform float materialShininess; 
+uniform float materialShininess;
+uniform float maxPhi;
 
 void main(void) {
 	
@@ -27,7 +28,9 @@ void main(void) {
 	specular=max(0,dot(n,hv));
 	specular=pow(specular,materialShininess);
   }
-  vec3 diffLight=clamp(vec3(141+110*utv,205-50*utv,197-22*utv)/256,0,1)*diffuse;
+  float rphiv=mod(50.*phiv,1.);
+  float smoothRing=smoothstep(-0.1,0.,-rphiv)+smoothstep(0.9,1.,rphiv);
+  vec3 diffLight=clamp(vec3(2*(utv-0.5),0,2*(0.5-utv))+vec3(0,smoothRing,0),0,1)*diffuse;
   vec3 specLight=lightColor*specular;
 
   out_fragColor=clamp(vec4(diffLight+specLight,1),0,1);
