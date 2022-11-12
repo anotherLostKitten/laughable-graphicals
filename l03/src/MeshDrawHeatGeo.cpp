@@ -151,13 +151,6 @@ void MeshDrawHeatGeo::drawVBOs(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack
   glUniform1f(aProgram->getUniform("materialShininess"), 255);
 
   GLSL::checkError(GET_FILE_LINE);
-  /**
-   * TODO: If you have extra uniforms / attributes in your shader, add them here also, example shown below
-   */
-  int maxPhiPos=aProgram->getUniform("maxPhi");
-  if(maxPhiPos>=0)
-	glUniform1f(maxPhiPos,((float)heds->maxphi)/300.f);
-  //cout<<"max phi "<<((float)heds->maxphi)<<"\n";
   
   glEnableVertexAttribArray(camSpacePositionID);
   glEnableVertexAttribArray(camSpaceNormalID);

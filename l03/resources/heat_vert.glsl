@@ -1,4 +1,5 @@
 #version 410 core
+// theodore peters 260919785
 
 in vec3 vertex;
 in vec3 normal;
@@ -17,7 +18,6 @@ uniform vec3 lightCamSpacePosition;
 uniform vec3 lightColor;
 uniform vec3 materialDiffuse;
 uniform float materialShininess;
-uniform float maxPhi;
 
 void main() {	
 	vec4 csp = MV * vec4( vertex, 1 );

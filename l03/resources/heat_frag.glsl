@@ -1,4 +1,5 @@
 #version 410 core
+// theodore peters 260919785
 
 in vec3 camSpacePosition;
 in vec3 camSpaceNormal;
@@ -11,15 +12,12 @@ uniform vec3 lightCamSpacePosition;
 uniform vec3 lightColor;
 uniform vec3 materialDiffuse;
 uniform float materialShininess;
-uniform float maxPhi;
 
 void main(void) {
 	
   vec3 v = normalize(-camSpacePosition);
   vec3 n = normalize(camSpaceNormal);
   vec3 l = normalize(lightCamSpacePosition - camSpacePosition);
-
-  // TODO: 11 Implement your GLSL distance stripes here!
 
   float diffuse=max(dot(n,v),0);
   float specular=0.0;
