@@ -83,13 +83,10 @@ void HEDS::solveHeatFlowStep(int GSSteps,double t){
   }
 }
 
-void HEDS::precomputeQuantities(){
-  /**
-   * TODO: you can do some pre-computation here to make things faster!
-   */
-}
+void HEDS::precomputeQuantities(){}
 
 void HEDS::updateDivx(){
+  int nancount=0;
   for(auto &v:*vertices){
 	HalfEdge*he=v->he,*end=v->he;
 	double vls=0.;
@@ -99,49 +96,60 @@ void HEDS::updateDivx(){
 	  vls+=oth->next->cwn*glm::dot(oth->e,grd)-oth->cwn*glm::dot(he->e,grd);
 	  he=oth->twin;
 	}while(he!=end);
-	v->divX=vls*0.5;
+	if(vls==vls)v->divX=vls*0.5;else{v->divX=1.;nancount++;}
 
-	/**
-	 * TODO: 9 Update the divergence of the normalized gradients, ie., v.divX for each Vertex v. ???
-	 */
   }
+  //cout<<"# NaN DivX: "<<nancount<<"\n";
 }
 
 void HEDS::updateGradu(){
+  int nancount=0;
   for(auto&f:*faces){
 	HalfEdge*he1=f->he;
 	HalfEdge*he2=he1->next;
 	HalfEdge*he3=he2->next;
-	glm::vec3 val=glm::normalize(he1->head->ut_float*glm::cross(he3->e,f->n)+he2->head->ut_float*glm::cross(he1->e,f->n)+he3->head->ut_float*glm::cross(he2->e,f->n));
-	if(val.x==val.x)f->gradu=val;
+	glm::vec3 val=
+	  glm::normalize(he1->head->ut_float*glm::cross(he3->e,f->n)+
+					 he2->head->ut_float*glm::cross(he1->e,f->n)+
+					 he3->head->ut_float*glm::cross(he2->e,f->n));
+	if(val.x==val.x)
+	  f->gradu=val;
+	else{
+	  nancount++;
+	  f->gradu=glm::vec3(0.f,0.f,0.f);
+	}
   }
+  //cout<<"# NaN gradu: "<<nancount<<"\n";
 }
 
 void HEDS::solveDistanceStep(int GSSteps){
   // Finally step the solution to the distance problem
   for(int i=0;i<GSSteps;i++){
+	int nancount=0;
 	for(auto&v:*vertices){
-	  
 	  HalfEdge*he=v->he->twin,*end=v->he->twin;
 	  int j=0;
 	  double vls=v->divX;
-	  cout<<"vls: "<<vls<<". ";
+	  //cout<<"vls: "<<vls<<". ";
 	  do{
 		vls-=v->Lij[j++]*he->head->phi;
 		he=he->twin->next;
 	  }while(he!=end);
 	  vls/=v->Lii;
-	  if(vls==vls)v->phi=vls;
-	  cout<<"phi: "<<v->phi<<"\n";
+	  if(vls==vls&&vls!=std::numeric_limits<double>::infinity()&&vls!=-std::numeric_limits<double>::infinity()){v->phi=vls;}else{
+		v->phi=v->divX;
+		nancount++;
+		//cout<<"Lii: "<<v->Lii<<" divX: "<<v->divX<<"\n";
+		do{
+		  //cout<<"Lij: "<<v->Lij[j++]<<" phij: "<<he->head->phi<<"\n";
+		  he=he->twin->next;
+		}while(he!=end);
 	  
-	  // LHS matrix is L, so to take all the LHS to the RSH for one variable we get
-	  // Lii phi_i = div X + sum_{j!=i} tLij phi_j
-	  
-	  
-	  /**
-	   * TODO: 10 Implement the inner loop of the Gauss-Seidel solve to compute the distances to each vertex, phi.
-	   */
+	  };
+	  //cout<<"phi: "<<v->phi<<"\n";
+	  //if(v->constrained)cout<<"constrained vector phi: "<<v->phi<<"\n";
 	}
+	//cout<<"# NaN phi (rd. "<<i<<"): "<<nancount<<"\n";
   }
 
   // Note that the solution to step III is unique only up to an additive constant,
@@ -156,6 +164,7 @@ void HEDS::solveDistanceStep(int GSSteps){
 	if(v->phi>maxphi)
 	  maxphi=v->phi;
   }
+  //cout<<"minphi: "<<minphi<<" maxphi: "<<maxphi<<"\n";
   maxphi-=minphi;
   for(auto&v:*vertices)
 	v->phi-=minphi;

@@ -157,8 +157,7 @@ void MeshDrawHeatGeo::drawVBOs(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack
   int maxPhiPos=aProgram->getUniform("maxPhi");
   if(maxPhiPos>=0)
 	glUniform1f(maxPhiPos,((float)heds->maxphi)/300.f);
-
-  cout<<"max phi "<<((float)heds->maxphi)<<"\n";
+  //cout<<"max phi "<<((float)heds->maxphi)<<"\n";
   
   glEnableVertexAttribArray(camSpacePositionID);
   glEnableVertexAttribArray(camSpaceNormalID);

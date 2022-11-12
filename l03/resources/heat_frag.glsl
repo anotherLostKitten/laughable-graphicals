@@ -28,9 +28,9 @@ void main(void) {
 	specular=max(0,dot(n,hv));
 	specular=pow(specular,materialShininess);
   }
-  float rphiv=mod(50.*phiv,1.);
+  float rphiv=mod(clamp(70.*phiv,.15,1024.),1.);
   float smoothRing=smoothstep(-0.1,0.,-rphiv)+smoothstep(0.9,1.,rphiv);
-  vec3 diffLight=clamp(vec3(2*(utv-0.5),0,2*(0.5-utv))+vec3(0,smoothRing,0),0,1)*diffuse;
+  vec3 diffLight=clamp(vec3(2*(utv-0.5),0,2*(0.5-utv))+vec3(0.1,smoothRing,0.1),0,1)*diffuse;
   vec3 specLight=lightColor*specular;
 
   out_fragColor=clamp(vec4(diffLight+specLight,1),0,1);
