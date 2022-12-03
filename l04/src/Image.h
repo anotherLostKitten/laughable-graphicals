@@ -1,3 +1,5 @@
+//theodore peters 260919785
+
 #pragma once
 #ifndef _IMAGE_H_
 #define _IMAGE_H_

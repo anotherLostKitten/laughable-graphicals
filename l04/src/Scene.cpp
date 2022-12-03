@@ -1,3 +1,5 @@
+//theodore peters 260919785
+
 #include "Scene.h"
 #include "Ray.h"
 #include "IntersectionData.h"

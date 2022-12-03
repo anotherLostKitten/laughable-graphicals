@@ -1,3 +1,5 @@
+//theodore peters 260919785
+
 #pragma once
 #ifndef LIGHT_H
 #define LIGHT_H

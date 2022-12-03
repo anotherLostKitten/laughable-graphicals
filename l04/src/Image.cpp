@@ -1,3 +1,5 @@
+//theodore peters 260919785
+
 #include <iostream>
 #include <cassert>
 #include "Image.h"
