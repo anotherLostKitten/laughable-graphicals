@@ -31,7 +31,7 @@ void Mesh::translate(glm::vec3 position)
 	{
 		j = 9 * (i+1) - 9;
 		// v1
-		posBuf[j + 0] = 1.0f;
+		// posBuf[j + 0] = 1.0f;
 		posBuf[j + 0] = posBuf[j + 0] + position.x;
 		posBuf[j + 1] = posBuf[j + 1] + position.y;
 		posBuf[j + 2] = posBuf[j + 2] + position.z;

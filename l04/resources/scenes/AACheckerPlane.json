@@ -31,7 +31,7 @@
     "lights": [
         {
             "name": "light1",
-            "type": "direction",
+            "type": "directional",
             "direction": [1.0, 1.0, 1.0],
             "colour": [0.8, 0.8, 0.8]
         },
@@ -40,7 +40,7 @@
             "type": "point",
             "position": [0.0, 1.0, 0.0],
             "colour": [0.8, 0.6, 0.6],
-            "power": 6e5
+            "power": 0.6
         }
     ]
 }

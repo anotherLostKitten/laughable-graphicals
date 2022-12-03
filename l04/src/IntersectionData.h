@@ -30,7 +30,7 @@ public:
 		n = glm::vec3(0.0f, 0.0f, 0.0f);
 		p = glm::vec3(0.0f, 0.0f, 0.0f);
 		t = FLT_MAX;
-		material->reset();
+		material.reset();
 	}
 
 	glm::vec3 n = glm::vec3(0.0f, 0.0f, 0.0f); // Intersection normal

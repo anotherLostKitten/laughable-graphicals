@@ -35,7 +35,7 @@
         },
         {
             "name": "green", "type": "point",
-            "position": [0.0, 4.0, 0.0], "colour": [0.0, 1.0, 0.0],
+            "position": [0.0, 0.0, 4.0], "colour": [0.0, 1.0, 0.0],
             "power": 0.8
         },
         {
