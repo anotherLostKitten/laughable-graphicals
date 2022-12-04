@@ -22,8 +22,8 @@ void HierachicalShape::intersect(const std::shared_ptr<Ray>ray,std::shared_ptr<I
   glm::vec4 tmp=Minv*glm::vec4(ray->origin,1.f);
   transformRay->origin=glm::vec3(tmp.x,tmp.y,tmp.z)/tmp.w;
   
-  tmp=Minv*glm::vec4(ray->direction,1.f);
-  transformRay->direction=glm::vec3(tmp.x,tmp.y,tmp.z)/tmp.w;
+  tmp=Minv*glm::vec4(ray->direction,0.f);
+  transformRay->direction=glm::vec3(tmp.x,tmp.y,tmp.z);
   
   transformData->t=intersection->t;
   
@@ -34,7 +34,7 @@ void HierachicalShape::intersect(const std::shared_ptr<Ray>ray,std::shared_ptr<I
 	//std::cout<<"overwritten t in "<<name<<", "<<type<<"\n";
 	intersection->t=transformData->t;
 	ray->computePoint(transformData->t,intersection->p);
-	tmp=glm::transpose(Minv)*glm::vec4(transformData->n,1.f);
+	tmp=glm::transpose(Minv)*glm::vec4(transformData->n,0.f);
 	intersection->n=glm::normalize(glm::vec3(tmp.x,tmp.y,tmp.z));
 	if(materials.size()==0)
 	  intersection->material=transformData->material;
@@ -44,8 +44,7 @@ void HierachicalShape::intersect(const std::shared_ptr<Ray>ray,std::shared_ptr<I
 }
 
 void HierachicalShape::print(std::string str){
-  std::cout<<str<<name<<": "<<type<<"\n";
-  std::cout<<str<<glm::to_string(M)<<"\n";
+  std::cout<<str<<name<<": "<<type<<" "<<glm::to_string(M)<<"\n";
   for(auto s:children)
 	s->print(str+"-");
 }

@@ -65,9 +65,8 @@ void Scene::render(){
 
   for(auto s:shapes)
 	s->print("|");
-  int i=512-252,j=512-183;
-	//for(int i=0;i<width;i++)
-	//for(int j=0;j<height;j++){
+	for(int i=0;i<width;i++)
+	for(int j=0;j<height;j++){
 	  intersection->reset();
 	  colour=glm::vec3(0.0f,0.0f,0.0f);
 	  
@@ -87,12 +86,12 @@ void Scene::render(){
 		  glm::vec3 ld=l->dir(intersection->p);
 		  shadowIntersection->reset();
 		  shadowRay->direction=ld;
-		  //for(auto s:shapes){
+		  for(auto s:shapes){
 			// TODO optimize shadow intersection
-			//s->intersect(shadowRay,shadowIntersection);
-			//if(shadowIntersection->t<FLT_MAX)break;
-		  //}
-		  //if(shadowIntersection->t<FLT_MAX)continue;
+			s->intersect(shadowRay,shadowIntersection);
+			if(shadowIntersection->t<FLT_MAX)break;
+		  }
+		  if(shadowIntersection->t<FLT_MAX)continue;
 		  colour+=l->colour*
 			(m->diffuse*glm::max(0.f,glm::dot(intersection->n,ld))
 			 +m->specular*glm::pow(glm::max(0.f,glm::dot(intersection->n,glm::normalize(ld+v))),m->hardness));
@@ -108,7 +107,7 @@ void Scene::render(){
 	  colour*=255;
 	  image->setPixel(i,j,colour.r,colour.g,colour.b);
 	
-	  //}
+	  }
 
   image->writeToFile(outputFilename);
 }
