@@ -19,7 +19,6 @@ Plane::~Plane(){
 }
 
 void Plane::intersect(const std::shared_ptr<Ray>ray,std::shared_ptr<IntersectionData>intersection){
-  // TODO: Objective 4: intersection of ray with plane
   glm::vec3 d=ray->direction,e=ray->origin;
   float dnm=glm::dot(d,normal);
   if(dnm==0.f)return;
@@ -29,7 +28,6 @@ void Plane::intersect(const std::shared_ptr<Ray>ray,std::shared_ptr<Intersection
 	intersection->t=t0;
 	ray->computePoint(t0,intersection->p);
 	intersection->n=dnm<0.f?normal:-1.f*normal;//idk to intersect both sides?
-	// TODO checkerboard material
 	if(materials.size()>1&&(int)(glm::floor(intersection->p.x)+glm::floor(intersection->p.z))%2)
 	  intersection->material=materials[1];
 	else

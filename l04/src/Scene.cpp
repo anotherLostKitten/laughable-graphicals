@@ -82,7 +82,6 @@ void Scene::render(){
 		shadowRay->origin=intersection->p;
 		for(auto l:lights){
 		  glm::vec3 ld=l->dir(intersection->p);
-		  // TODO shadow
 		  shadowIntersection->reset();
 		  shadowRay->direction=ld;
 		  for(auto s:shapes){
