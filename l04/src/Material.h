@@ -18,22 +18,22 @@
  */
 class Material{
 public:
-	Material():name(""),diffuse(glm::vec3(1.0f, 1.0f, 1.0f)),specular(glm::vec3(0.0f, 0.0f, 0.0f)),hardness(0.f){
-	}
-	virtual~Material(){}
+  Material():name(""),diffuse(glm::vec3(1.0f,1.0f,1.0f)),specular(glm::vec3(0.0f,0.0f,0.0f)),hardness(0.f){
+  }
+  virtual~Material(){}
 
-	void reset(){
-		name="";
-		diffuse=glm::vec3(1.0f, 1.0f, 1.0f);
-		specular=glm::vec3(0.0f, 0.0f, 0.0f);
-		hardness=0.f;
-	}
+  void reset(){
+	name="";
+	diffuse=glm::vec3(1.0f,1.0f,1.0f);
+	specular=glm::vec3(0.0f,0.0f,0.0f);
+	hardness=0.f;
+  }
 
-	std::string name;	// Material name
-	glm::vec3 diffuse;	// Diffuse colour. Default white
-	glm::vec3 specular; // Specular colour. Default black
-	float hardness;		// Specular hardness
-	int ID=-1; // ID for material to pair with shapes 
+  std::string name;	// Material name
+  glm::vec3 diffuse;	// Diffuse colour. Default white
+  glm::vec3 specular; // Specular colour. Default black
+  float hardness;		// Specular hardness
+  int ID=-1; // ID for material to pair with shapes 
 };
 
 #endif

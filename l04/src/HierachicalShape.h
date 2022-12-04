@@ -8,6 +8,7 @@
 #include "Material.h"
 
 #include <vector>
+#include<string>
 
 /**
  * The scene is constructed from a hierarchy of nodes, where each node
@@ -22,24 +23,24 @@
  * By Loïc Nassif
  * Adapted from Paul Kry's code.
  */
-class HierachicalShape : public Shape
-{
+class HierachicalShape:public Shape{
 public:
-	HierachicalShape();
+  HierachicalShape();
 
-	virtual ~HierachicalShape();
+  virtual~HierachicalShape();
 
-	void intersect(const std::shared_ptr<Ray> ray, std::shared_ptr<IntersectionData> intersection);
+  void intersect(const std::shared_ptr<Ray>ray,std::shared_ptr<IntersectionData>intersection);
+  void print(std::string str);
+  
+  std::vector<std::shared_ptr<Material>>materials;
+  std::vector<std::shared_ptr<Shape>>children;
 
-	std::vector<std::shared_ptr<Material>> materials;
-	std::vector<std::shared_ptr<Shape>> children;
-
-	glm::mat4 M; // Matrix transform
-	glm::mat4 Minv; // Matrix transform inverse
+  glm::mat4 M; // Matrix transform
+  glm::mat4 Minv; // Matrix transform inverse
 
 private:
-	std::shared_ptr<Ray> transformRay;
-	std::shared_ptr<IntersectionData> transformData;
+  std::shared_ptr<Ray>transformRay;
+  std::shared_ptr<IntersectionData>transformData;
 };
 
 #endif

@@ -6,6 +6,7 @@
 
 #include <memory>
 #include <string>
+#include<iostream>
 
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -33,9 +34,14 @@ public:
 
   virtual void intersect(const std::shared_ptr<Ray>ray,std::shared_ptr<IntersectionData>intersection){}
 
+  
   std::vector<std::shared_ptr<Material>>materials;
   std::string name;
   std::string type;
+  
+  virtual void print(std::string str){
+	std::cout<<str<<name<<": "<<type<<"\n";
+  }
 };
 
 #endif
