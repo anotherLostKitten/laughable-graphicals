@@ -13,25 +13,29 @@
 #include <iostream>
 
 
-void populateVectorHelper(glm::vec3& target, const std::string&& e0, json& data){
+void populateVectorHelper(glm::vec3& target, const std::string&& e0, json& data,bool crit=true){
   try{
 	target.x = data[e0][0];
 	target.y = data[e0][1];
 	target.z = data[e0][2];
   }catch (...){
-	std::cerr << "Could not process critical JSON value. Exiting." << std::endl;
-	throw std::exception();
+	if(crit){
+	  std::cerr << "Could not process critical JSON value. Exiting." << std::endl;
+	  throw std::exception();
+	}
   }
 }
 
-void populateVectorHelper(glm::vec3& target, const std::string&& e0, const std::string&& e1, json& data){
-  try {
+void populateVectorHelper(glm::vec3& target, const std::string&& e0, const std::string&& e1, json& data,bool crit=true){
+  try{
 	target.x = data[e0][e1][0];
 	target.y = data[e0][e1][1];
 	target.z = data[e0][e1][2];
   }catch (...){
-	std::cerr << "Could not process critical JSON value. Exiting." << std::endl;
-	throw std::exception();
+	if(crit){
+	  std::cerr << "Could not process critical JSON value. Exiting." << std::endl;
+	  throw std::exception();
+	}
   }
 }
 
@@ -270,12 +274,16 @@ void Parser::createScene(std::shared_ptr<Scene> scene){
 
 	  glm::vec3 specular = glm::vec3();
 	  populateVectorHelper(specular, "specular", mat);
-
+	  
 	  float hardness = mat["hardness"];
 
 	  std::shared_ptr<Material> material = std::make_shared<Material>();
+	  material->reset();
 	  material->diffuse = diffuse;
 	  material->specular = specular;
+
+	  populateVectorHelper(material->mirror,"mirror",mat,false);
+		
 	  material->ID = matID;
 	  material->name = matName;
 	  material->hardness = hardness;

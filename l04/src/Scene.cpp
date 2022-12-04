@@ -78,7 +78,8 @@ void Scene::render(){
 		  pixy=((float)(k/samples)+jitter?dist(gen):0.5f)/(float)samples;
 		intersection->reset();
 		colour=glm::vec3(0.0f,0.0f,0.0f);
-	  
+
+		ray->origin=cam->position;
 		ray->direction=(left+(right-left)*(((float)i+pixx)/width))*u+(bottom+(top-bottom)*(((float)j+pixy)/height))*v-d*w;
 		//std::cout<<"ray dir: "<<ray->direction.x<<", "<<ray->direction.y<<", "<<ray->direction.z<<"\n";
 	  
@@ -96,7 +97,6 @@ void Scene::render(){
 			shadowIntersection->reset();
 			shadowRay->direction=ld;
 			for(auto s:shapes){
-			  // TODO optimize shadow intersection of heirarchical shapes, meshes
 			  s->intersect(shadowRay,shadowIntersection,true);
 			  if(shadowIntersection->t<FLT_MAX)break;
 			}
@@ -105,13 +105,45 @@ void Scene::render(){
 			  (m->diffuse*glm::max(0.f,glm::dot(intersection->n,ld))
 			   +m->specular*glm::pow(glm::max(0.f,glm::dot(intersection->n,glm::normalize(ld+v))),m->hardness));
 		  }
+		  if(m->mirror.r>0.f||m->mirror.g>0.f||m->mirror.b>0.f){
+			float cos=glm::dot(intersection->n,v);
+			float coeff=glm::pow(1.f-cos,5);
+			glm::vec3 colourref=glm::vec3(0.f,0.f,0.f),fres=m->mirror*(1.f-coeff)+coeff;
+			
+			ray->origin=intersection->p;
+			ray->direction=2.f*cos*intersection->n-v;
+			
+			intersection->reset();
+			for(auto s:shapes){
+			  s->intersect(ray,intersection,false);
+			}
+			
+			if(intersection->t<FLT_MAX){
+			  auto m=intersection->material;
+			  glm::vec3 v=glm::normalize(ray->direction)*-1.f;
+			  shadowRay->origin=intersection->p;
+			  for(auto l:lights){
+				glm::vec3 ld=l->dir(intersection->p);
+				shadowIntersection->reset();
+				shadowRay->direction=ld;
+				for(auto s:shapes){
+				  s->intersect(shadowRay,shadowIntersection,true);
+				  if(shadowIntersection->t<FLT_MAX)break;
+				}
+				if(shadowIntersection->t<FLT_MAX)continue;
+				colourref+=l->colour*
+				  (m->diffuse*glm::max(0.f,glm::dot(intersection->n,ld))
+				   +m->specular*glm::pow(glm::max(0.f,glm::dot(intersection->n,glm::normalize(ld+v))),m->hardness));
+			  }
+			  colour+=colourref*fres;
+			  }
+			
+		  }
+		  colour.r=glm::min(1.0f,colour.r);
+		  colour.g=glm::min(1.0f,colour.g);
+		  colour.b=glm::min(1.0f,colour.b);
+		  pixel+=colour/(float)(samples*samples);
 		}
-	  
-		// Clamp colour values to 1
-		colour.r=glm::min(1.0f,colour.r);
-		colour.g=glm::min(1.0f,colour.g);
-		colour.b=glm::min(1.0f,colour.b);
-		pixel+=colour/(float)(samples*samples);
 	  }
 	  // Write pixel colour to image
 	  pixel*=255;

@@ -16,7 +16,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-using json = nlohmann::json;
+using json=nlohmann::json;
 
 class Scene;
 
@@ -25,18 +25,17 @@ class Scene;
 * Not required to be modified.
 * By Loïc Nassif
 */
-class Parser
-{
+class Parser{
 public:
-	Parser(const std::string&& _filename);
-	Parser() {}
-	virtual ~Parser();
+  Parser(const std::string&&_filename);
+  Parser(){}
+  virtual ~Parser();
 
-	void createScene(std::shared_ptr<Scene> scene);
-	void setJSONfilename(const std::string _filename);
+  void createScene(std::shared_ptr<Scene>scene);
+  void setJSONfilename(const std::string _filename);
 
 private:
-	std::string filename;
+  std::string filename;
 };
 
 #endif

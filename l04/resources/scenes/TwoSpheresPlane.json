@@ -1,7 +1,7 @@
 {
     "resolution": [640, 480],
-    "AA": { "jitter": false, "samples": 1 },
-    "ambient": [0.2, 0.2, 0.2],
+    "AA": { "jitter": false, "samples": 4 },
+    "ambient": [0.1, 0.1, 0.1],
     "camera": {
         "position": [0.0, 4.0, 6.0],
         "lookAt": [0.0, 2.0, 0.0],
@@ -11,22 +11,22 @@
     "materials": [
         {
             "name": "blue", "ID": 0, 
-            "diffuse": [0.0, 0.0, 1.0], "specular": [0.5, 0.5, 0.5],
+            "diffuse": [0.0, 0.0, 1.0], "specular": [0.5, 0.5, 0.5], "mirror": [0.1, 0.1, 0.1],
             "hardness": 16
         },
         {
             "name": "red", "ID": 1, 
-            "diffuse": [1.0, 0.0, 0.0], "specular": [0.5, 0.5, 0.5],
+          "diffuse": [1.0, 0.0, 0.0], "specular": [0.5, 0.5, 0.5], "mirror": [0.1, 0.1, 0.1],
             "hardness": 50
         },
         {
             "name": "black", "ID": 2, 
-            "diffuse": [0.0, 0.0, 0.0], "specular": [0.0, 0.0, 0.0],
+          "diffuse": [0.1, 0.1, 0.1], "specular": [0.0, 0.0, 0.0], "mirror": [0.2, 0.2, 0.2],
             "hardness": 0
         },
         {
             "name": "white", "ID": 3, 
-            "diffuse": [1.0, 1.0, 1.0], "specular": [0.0, 0.0, 0.0],
+            "diffuse": [1.0, 1.0, 1.0], "specular": [0.0, 0.0, 0.0], "mirror": [0.2, 0.2, 0.2],
             "hardness": 0
         }
     ],    
@@ -35,7 +35,7 @@
             "name": "plane", "type": "plane",
             "normal": [0.0, 1.0, 0.0],
             "position": [0.0, 0.0, 0.0],
-            "materials": [2, 3]
+          "materials": [2,3]
         },
         {
             "name": "sphere0",
