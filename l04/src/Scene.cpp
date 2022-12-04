@@ -79,15 +79,21 @@ void Scene::render(){
 		colour=ambient;
 		auto m=intersection->material;
 		glm::vec3 v=glm::normalize(ray->direction)*-1.f;
+		shadowRay->origin=intersection->p;
 		for(auto l:lights){
 		  glm::vec3 ld=l->dir(intersection->p);
+		  // TODO shadow
+		  shadowIntersection->reset();
+		  shadowRay->direction=ld;
+		  for(auto s:shapes){
+			s->intersect(shadowRay,shadowIntersection);
+		  }
+		  if(shadowIntersection->t<FLT_MAX)continue;
 		  colour+=l->colour*
 			(m->diffuse*glm::max(0.f,glm::dot(intersection->n,ld))
 			 +m->specular*glm::pow(glm::max(0.f,glm::dot(intersection->n,glm::normalize(ld+v))),m->hardness));
 		}
 	  }
-			
-	  // TODO: 3. compute the shaded result for the intersection point
 	  
 	  // Clamp colour values to 1
 	  colour.r=glm::min(1.0f,colour.r);

@@ -20,17 +20,14 @@ Sphere::~Sphere(){
 
 void Sphere::intersect(const std::shared_ptr<Ray>ray,std::shared_ptr<IntersectionData>intersection){
   glm::vec3 d=ray->direction,e=ray->origin;
-
   float a=glm::dot(d,d),b=glm::dot(d,e-center),c=glm::dot(e-center,e-center)-radius*radius;
   float dsc=b*b-a*c;
   if(dsc<0)return;
   float t0=(-b-sqrt(dsc))/a,t1=(-b+sqrt(dsc))/a;
   if(t0>t1){
-	float tmp=t0;
-	t0=t1;
-	t1=tmp;
+	float tmp=t0;t0=t1;t1=tmp;
   }
-  if(t0>=0){
+  if(t0>=SPHERE_EPSILON){
 	if(t0<intersection->t){
 	  intersection->t=t0;
 	  ray->computePoint(t0,intersection->p);
@@ -38,7 +35,7 @@ void Sphere::intersect(const std::shared_ptr<Ray>ray,std::shared_ptr<Intersectio
 	  intersection->material=materials[0];
 	}
   }else{
-	if(t1>=0&&t1<intersection->t){
+	if(t1>=SPHERE_EPSILON&&t1<intersection->t){
 	  intersection->t=t1;
 	  ray->computePoint(t1,intersection->p);
 	  intersection->n=(intersection->p-center)/radius;

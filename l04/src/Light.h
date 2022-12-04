@@ -25,8 +25,9 @@ public:
   virtual~Light(){}
 
   glm::vec3 dir(const glm::vec3 point){
-	if(type=="point")
+	if(type=="point"){
 	  return glm::normalize(position-point);
+	}
 	return position;
   }
   
