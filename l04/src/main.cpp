@@ -3,6 +3,7 @@
 #define _USE_MATH_DEFINES
 #include <cmath>
 #include <iostream>
+#include<thread>
 
 #include "Scene.h"
 #include "Parser.h"
@@ -26,6 +27,10 @@ static int initScene(const std::string SCENE, const std::string outputFile) {
 	return 0;
 }
 
+void exec(int thrn){
+  scene->renderThr(thrn);
+}
+
 int main(int argc, char **argv) {
 	if (argc < 3) {
 		cout << "Please specify the scene to render and an output png file." << endl;
@@ -36,7 +41,16 @@ int main(int argc, char **argv) {
 	int exitStatus = initScene( argv[1], argv[2] );
 	if (exitStatus != 0) return exitStatus;
 
-	scene->render();
+	scene->renderSetup();
 
+	std::cout << "Spawning "<<RENDER_THREADS<<" threads...\n";
+	std::thread workers[RENDER_THREADS];
+	for(int i=0;i<RENDER_THREADS;i++)
+	  workers[i]=std::thread(exec,i);
+	for(int i=0;i<RENDER_THREADS;i++)
+	  workers[i].join();
+
+	scene->writeFile();
+	
 	return 0;
 }

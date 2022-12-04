@@ -37,42 +37,36 @@ void Scene::addLight(shared_ptr<Light>light){
   lights.push_back(light);
 }
 
-void Scene::render(){
+void Scene::renderSetup(){
+  camDir=-cam->lookAt+cam->position;
+  d=1;
+  top=d*glm::tan(0.5*M_PI*cam->fovy/180.f);
+  right=aspect*top;
+  bottom=-top;
+  left=-right;
+
+  // Compute basis
+  w=glm::normalize(camDir);
+  u=glm::normalize(glm::cross(cam->up,w));
+  v=glm::cross(w,u);
+
+  for(auto s:shapes)s->print("|");
+}
+
+void Scene::renderThr(int thrdn){
   std::random_device rd;
   std::ranlux24 gen{rd()};
   std::uniform_real_distribution<> dist(0, 1);
-
+  
   std::shared_ptr<IntersectionData>intersection=make_shared<IntersectionData>();
   std::shared_ptr<IntersectionData>shadowIntersection=make_shared<IntersectionData>();
-  glm::vec3 camDir=-cam->lookAt+cam->position;
-  float d=1;
-  float top=d*glm::tan(0.5*M_PI*cam->fovy/180.f);
-  float right=aspect*top;
-  float bottom=-top;
-  float left=-right;
-
-  // Compute basis
-  glm::vec3 w=glm::normalize(camDir);
-  glm::vec3 u=glm::normalize(glm::cross(cam->up,w));
-  glm::vec3 v=glm::cross(w,u);
-
   std::shared_ptr<Ray>ray=make_shared<Ray>();
   std::shared_ptr<Ray>shadowRay=make_shared<Ray>();
-
-  //glm::vec3 eyeVec=glm::vec3();
-  //glm::vec3 lightVec=glm::vec3();
-  //glm::vec3 h=glm::vec3(); // Bisection vector
-
-  //ray->origin=cam->position;
-
   glm::vec3 pixel;
   glm::vec3 colour;
 
-  for(auto s:shapes)s->print("|");
-
-  
-  
-  for(int i=0;i<width;i++)
+  for(int i=thrdn;i<width;i+=RENDER_THREADS){
+	//std::cout<<"thrdn: "<<thrdn<<", i: "<<i<<"\n";
 	for(int j=0;j<height;j++){
 	  pixel=glm::vec3(0.0f,0.0f,0.0f);
 	  for(int k=0;k<samples*samples;k++){
@@ -138,7 +132,7 @@ void Scene::render(){
 				   +m->specular*glm::pow(glm::max(0.f,glm::dot(intersection->n,glm::normalize(ld+v))),m->hardness));
 			  }
 			  colour+=colourref*fres;
-			  }
+			}
 			
 		  }
 		  colour.r=glm::min(1.0f,colour.r);
@@ -150,8 +144,10 @@ void Scene::render(){
 	  // Write pixel colour to image
 	  pixel*=255;
 	  image->setPixel(i,j,pixel.r,pixel.g,pixel.b);
-	
-	  }
+	}
+  }
+}
 
+void Scene::writeFile() {
   image->writeToFile(outputFilename);
 }
