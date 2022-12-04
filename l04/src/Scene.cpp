@@ -59,16 +59,18 @@ void Scene::render(){
   std::shared_ptr<Ray>ray=make_shared<Ray>();
   std::shared_ptr<Ray>shadowRay=make_shared<Ray>();
 
-  glm::vec3 eyeVec=glm::vec3();
-  glm::vec3 lightVec=glm::vec3();
-  glm::vec3 h=glm::vec3(); // Bisection vector
+  //glm::vec3 eyeVec=glm::vec3();
+  //glm::vec3 lightVec=glm::vec3();
+  //glm::vec3 h=glm::vec3(); // Bisection vector
 
-  ray->origin=cam->position;
+  //ray->origin=cam->position;
 
   glm::vec3 pixel;
   glm::vec3 colour;
 
   for(auto s:shapes)s->print("|");
+
+  
   
   for(int i=0;i<width;i++)
 	for(int j=0;j<height;j++){
