@@ -9,6 +9,7 @@
 
 #include <stdlib.h>
 #include<iostream>
+#include<random>
 
 float SHADOW_EPSILON=1e-6; // To prevent shadow acne
 
@@ -37,6 +38,10 @@ void Scene::addLight(shared_ptr<Light>light){
 }
 
 void Scene::render(){
+  std::random_device rd;
+  std::ranlux24 gen{rd()};
+  std::uniform_real_distribution<> dist(0, 1);
+
   std::shared_ptr<IntersectionData>intersection=make_shared<IntersectionData>();
   std::shared_ptr<IntersectionData>shadowIntersection=make_shared<IntersectionData>();
   glm::vec3 camDir=-cam->lookAt+cam->position;
@@ -60,52 +65,57 @@ void Scene::render(){
 
   ray->origin=cam->position;
 
-  glm::vec3 pixel=glm::vec3();
-  glm::vec3 colour=glm::vec3();
+  glm::vec3 pixel;
+  glm::vec3 colour;
 
-  for(auto s:shapes)
-	s->print("|");
-	for(int i=0;i<width;i++)
+  for(auto s:shapes)s->print("|");
+  
+  for(int i=0;i<width;i++)
 	for(int j=0;j<height;j++){
-	  intersection->reset();
-	  colour=glm::vec3(0.0f,0.0f,0.0f);
+	  pixel=glm::vec3(0.0f,0.0f,0.0f);
+	  for(int k=0;k<samples*samples;k++){
+		float pixx=((float)(k%samples)+jitter?dist(gen):0.5f)/(float)samples,
+		  pixy=((float)(k/samples)+jitter?dist(gen):0.5f)/(float)samples;
+		intersection->reset();
+		colour=glm::vec3(0.0f,0.0f,0.0f);
 	  
-	  ray->direction=(left+(right-left)*(((float)i+0.5f)/width))*u+(bottom+(top-bottom)*(((float)j+0.5f)/height))*v-d*w;
-	  //std::cout<<"ray dir: "<<ray->direction.x<<", "<<ray->direction.y<<", "<<ray->direction.z<<"\n";
+		ray->direction=(left+(right-left)*(((float)i+pixx)/width))*u+(bottom+(top-bottom)*(((float)j+pixy)/height))*v-d*w;
+		//std::cout<<"ray dir: "<<ray->direction.x<<", "<<ray->direction.y<<", "<<ray->direction.z<<"\n";
 	  
-	  for(auto s:shapes){
-		s->intersect(ray,intersection);
-	  }
-
-	  if(intersection->t<FLT_MAX){
-		colour=ambient;
-		auto m=intersection->material;
-		glm::vec3 v=glm::normalize(ray->direction)*-1.f;
-		shadowRay->origin=intersection->p;
-		for(auto l:lights){
-		  glm::vec3 ld=l->dir(intersection->p);
-		  shadowIntersection->reset();
-		  shadowRay->direction=ld;
-		  for(auto s:shapes){
-			// TODO optimize shadow intersection
-			s->intersect(shadowRay,shadowIntersection);
-			if(shadowIntersection->t<FLT_MAX)break;
-		  }
-		  if(shadowIntersection->t<FLT_MAX)continue;
-		  colour+=l->colour*
-			(m->diffuse*glm::max(0.f,glm::dot(intersection->n,ld))
-			 +m->specular*glm::pow(glm::max(0.f,glm::dot(intersection->n,glm::normalize(ld+v))),m->hardness));
+		for(auto s:shapes){
+		  s->intersect(ray,intersection);
 		}
+
+		if(intersection->t<FLT_MAX){
+		  colour=ambient;
+		  auto m=intersection->material;
+		  glm::vec3 v=glm::normalize(ray->direction)*-1.f;
+		  shadowRay->origin=intersection->p;
+		  for(auto l:lights){
+			glm::vec3 ld=l->dir(intersection->p);
+			shadowIntersection->reset();
+			shadowRay->direction=ld;
+			for(auto s:shapes){
+			  // TODO optimize shadow intersection of heirarchical shapes
+			  s->intersect(shadowRay,shadowIntersection);
+			  if(shadowIntersection->t<FLT_MAX)break;
+			}
+			if(shadowIntersection->t<FLT_MAX)continue;
+			colour+=l->colour*
+			  (m->diffuse*glm::max(0.f,glm::dot(intersection->n,ld))
+			   +m->specular*glm::pow(glm::max(0.f,glm::dot(intersection->n,glm::normalize(ld+v))),m->hardness));
+		  }
+		}
+	  
+		// Clamp colour values to 1
+		colour.r=glm::min(1.0f,colour.r);
+		colour.g=glm::min(1.0f,colour.g);
+		colour.b=glm::min(1.0f,colour.b);
+		pixel+=colour/(float)(samples*samples);
 	  }
-	  
-	  // Clamp colour values to 1
-	  colour.r=glm::min(1.0f,colour.r);
-	  colour.g=glm::min(1.0f,colour.g);
-	  colour.b=glm::min(1.0f,colour.b);
-	  
 	  // Write pixel colour to image
-	  colour*=255;
-	  image->setPixel(i,j,colour.r,colour.g,colour.b);
+	  pixel*=255;
+	  image->setPixel(i,j,pixel.r,pixel.g,pixel.b);
 	
 	  }
 

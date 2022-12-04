@@ -24,7 +24,7 @@
         {
             "name": "plane", "type": "plane",
             "normal": [0.0, 1.0, 0.0],
-            "position": [0.0, -40.0, 0.0],
+            "position": [0.0, 0.0, 0.0],
             "materials": [2, 1]
         }
     ],

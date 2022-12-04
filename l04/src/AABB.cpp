@@ -31,6 +31,11 @@ void AABB::intersect(const std::shared_ptr<Ray>ray,std::shared_ptr<IntersectionD
   if(d.x!=0.f){
 	tx0=(minpt.x-e.x)/d.x;
 	tx1=(maxpt.x-e.x)/d.x;
+	if(tx0>tx1){
+	  float tmp=tx0;
+	  tx0=tx1;
+	  tx1=tmp;
+	}
   }else if(e.x<minpt.x||e.x>maxpt.x){
 	//std::cout<<"parallel x\n";
 	return;
@@ -38,6 +43,11 @@ void AABB::intersect(const std::shared_ptr<Ray>ray,std::shared_ptr<IntersectionD
   if(d.y!=0.f){
 	ty0=(minpt.y-e.y)/d.y;
 	ty1=(maxpt.y-e.y)/d.y;
+	if(ty0>ty1){
+	  float tmp=ty0;
+	  ty0=ty1;
+	  ty1=tmp;
+	}
   }else if(e.y<minpt.y||e.y>maxpt.y){
 	//std::cout<<"parallel y\n";
 	return;
@@ -45,6 +55,11 @@ void AABB::intersect(const std::shared_ptr<Ray>ray,std::shared_ptr<IntersectionD
   if(d.z!=0.f){
 	tz0=(minpt.z-e.z)/d.z;
 	tz1=(maxpt.z-e.z)/d.z;
+	if(tz0>tz1){
+	  float tmp=tz0;
+	  tz0=tz1;
+	  tz1=tmp;
+	}
   }else if(e.z<minpt.z||e.z>maxpt.z){
 	//std::cout<<"parallel z\n";
 	return;
@@ -54,26 +69,25 @@ void AABB::intersect(const std::shared_ptr<Ray>ray,std::shared_ptr<IntersectionD
   //std::cout<<"ty: "<<ty0<<", "<<ty1<<"\n";
   //std::cout<<"tz: "<<tz0<<", "<<tz1<<"\n";
   
-  float tmax=glm::min(glm::min(glm::max(tx0,tx1),glm::max(ty0,ty1)),glm::max(tz0,tz1)),tmin;
+  float tmax=glm::min(glm::min(tx1,ty1),tz1),tmin;
 
   glm::vec3 nrml;
 
-  float tx=glm::min(tx0,tx1),ty=glm::min(ty0,ty1),tz=glm::min(tz0,tz1);
-  if(tx>ty)
-	if(tx>tz){
+  if(tx0>ty0)
+	if(tx0>tz0){
 	  nrml=glm::vec3(1.f,0.f,0.f);
-	  tmin=tx;
+	  tmin=tx0;
 	}else{
 	  nrml=glm::vec3(0.f,0.f,1.f);
-	  tmin=tz;
+	  tmin=tz0;
 	}
   else
-	if(ty>tz){
+	if(ty0>tz0){
 	  nrml=glm::vec3(0.f,1.f,0.f);
-	  tmin=ty;
+	  tmin=ty0;
 	}else{
 	  nrml=glm::vec3(0.f,0.f,1.f);
-	  tmin=tz;
+	  tmin=tz0;
 	}
   
   
