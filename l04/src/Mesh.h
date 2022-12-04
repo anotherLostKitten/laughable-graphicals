@@ -16,29 +16,28 @@
  * - norBuf should be of length 3*ntris (if normals are available)
  * - texBuf should be of length 2*ntris (if texture coords are available)
  */
-class Mesh : public Shape
-{
+class Mesh:public Shape{
 public:
-	Mesh(const std::string& meshName);
-	Mesh(const std::string& meshName, glm::vec3 position);
+  Mesh(const std::string&meshName);
+  Mesh(const std::string&meshName,glm::vec3 position);
 
-	virtual ~Mesh();
-	void loadOBJ(const std::string &meshName);
+  virtual~Mesh();
+  void loadOBJ(const std::string&meshName);
 	
-	void intersect(const std::shared_ptr<Ray> ray, std::shared_ptr<IntersectionData> intersection);
+  void intersect(const std::shared_ptr<Ray>ray,std::shared_ptr<IntersectionData>intersection,bool shad);
 
-	void translate(glm::vec3 position);
+  void translate(glm::vec3 position);
 
-	void scale(float s); // Uniform scale
+  void scale(float s); // Uniform scale
 
-	std::string filepath;
+  std::string filepath;
 
 private:
-	std::vector<float> posBuf;
-	std::vector<float> norBuf;
-	std::vector<float> texBuf;
+  std::vector<float> posBuf;
+  std::vector<float> norBuf;
+  std::vector<float> texBuf;
 
-	int faceCount = 0;
+  int faceCount=0;
 };
 
 #endif

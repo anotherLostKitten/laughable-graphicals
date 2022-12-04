@@ -32,7 +32,7 @@ public:
   Shape(){}
   virtual~Shape(){}
 
-  virtual void intersect(const std::shared_ptr<Ray>ray,std::shared_ptr<IntersectionData>intersection){}
+  virtual void intersect(const std::shared_ptr<Ray>ray,std::shared_ptr<IntersectionData>intersection,bool shad){}
 
   
   std::vector<std::shared_ptr<Material>>materials;

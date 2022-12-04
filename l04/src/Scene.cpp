@@ -83,7 +83,7 @@ void Scene::render(){
 		//std::cout<<"ray dir: "<<ray->direction.x<<", "<<ray->direction.y<<", "<<ray->direction.z<<"\n";
 	  
 		for(auto s:shapes){
-		  s->intersect(ray,intersection);
+		  s->intersect(ray,intersection,false);
 		}
 
 		if(intersection->t<FLT_MAX){
@@ -96,8 +96,8 @@ void Scene::render(){
 			shadowIntersection->reset();
 			shadowRay->direction=ld;
 			for(auto s:shapes){
-			  // TODO optimize shadow intersection of heirarchical shapes
-			  s->intersect(shadowRay,shadowIntersection);
+			  // TODO optimize shadow intersection of heirarchical shapes, meshes
+			  s->intersect(shadowRay,shadowIntersection,true);
 			  if(shadowIntersection->t<FLT_MAX)break;
 			}
 			if(shadowIntersection->t<FLT_MAX)continue;

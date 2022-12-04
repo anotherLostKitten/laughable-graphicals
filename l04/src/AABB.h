@@ -19,7 +19,7 @@ public:
 
   virtual~AABB();
 
-  void intersect(const std::shared_ptr<Ray>ray,std::shared_ptr<IntersectionData>intersection);
+  void intersect(const std::shared_ptr<Ray>ray,std::shared_ptr<IntersectionData>intersection,bool shad);
 
   glm::vec3 minpt;
   glm::vec3 maxpt;

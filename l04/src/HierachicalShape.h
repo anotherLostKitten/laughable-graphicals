@@ -29,7 +29,7 @@ public:
 
   virtual~HierachicalShape();
 
-  void intersect(const std::shared_ptr<Ray>ray,std::shared_ptr<IntersectionData>intersection);
+  void intersect(const std::shared_ptr<Ray>ray,std::shared_ptr<IntersectionData>intersection,bool shad);
   void print(std::string str);
   
   std::vector<std::shared_ptr<Material>>materials;

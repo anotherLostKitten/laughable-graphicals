@@ -23,8 +23,7 @@ AABB::AABB(glm::vec3 size,glm::vec3 position){
 AABB::~AABB(){
 }
 
-void AABB::intersect(const std::shared_ptr<Ray>ray,std::shared_ptr<IntersectionData>intersection){
-  // TODO: Objective 6: intersection of Ray with axis aligned box
+void AABB::intersect(const std::shared_ptr<Ray>ray,std::shared_ptr<IntersectionData>intersection,bool shad){
   glm::vec3 d=ray->direction,e=ray->origin;
   float tx0=t_min,tx1=t_max,ty0=t_min,ty1=t_max,tz0=t_min,tz1=t_max;
   //std::cout<<"testing intersecting ray "<<glm::to_string(e)<<"+"<<glm::to_string(d)<<"*t\n  with AABB "<<glm::to_string(minpt)<<glm::to_string(maxpt)<<"\n";
@@ -98,6 +97,7 @@ void AABB::intersect(const std::shared_ptr<Ray>ray,std::shared_ptr<IntersectionD
   //std::cout<<"hit\n";
   if(tmin>=AABB_EPSILON&&tmin<intersection->t){
 	intersection->t=tmin;
+	if(shad)return;
 	ray->computePoint(tmin,intersection->p);
 	intersection->n=glm::dot(nrml,d)<0.f?nrml:-1.f*nrml;//idk to intersect both sides?
 	intersection->material=materials[0];
