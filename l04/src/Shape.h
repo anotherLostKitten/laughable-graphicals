@@ -28,14 +28,14 @@ class Material;
 */
 class Shape{
 public:
-	Shape(){}
-	virtual~Shape(){}
+  Shape(){}
+  virtual~Shape(){}
 
-	virtual void intersect(const std::shared_ptr<Ray>ray,std::shared_ptr<IntersectionData>intersection){}
+  virtual void intersect(const std::shared_ptr<Ray>ray,std::shared_ptr<IntersectionData>intersection){}
 
-	std::vector<std::shared_ptr<Material>>materials;
-	std::string name;
-	std::string type;
+  std::vector<std::shared_ptr<Material>>materials;
+  std::string name;
+  std::string type;
 };
 
 #endif

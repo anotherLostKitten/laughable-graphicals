@@ -71,13 +71,21 @@ void Scene::render(){
 	  ray->direction=(left+(right-left)*(((float)i+0.5f)/width))*u+(bottom+(top-bottom)*(((float)j+0.5f)/height))*v-d*w;
 	  //std::cout<<"ray dir: "<<ray->direction.x<<", "<<ray->direction.y<<", "<<ray->direction.z<<"\n";
 	  
-	  // TODO: 2. test for intersection with scene surfaces
 	  for(auto s:shapes){
 		s->intersect(ray,intersection);
 	  }
 
-	  if(intersection->t<FLT_MAX)
-		colour=glm::vec3(1.0f,1.0f,1.0f);
+	  if(intersection->t<FLT_MAX){
+		colour=ambient;
+		auto m=intersection->material;
+		glm::vec3 v=glm::normalize(ray->direction)*-1.f;
+		for(auto l:lights){
+		  glm::vec3 ld=l->dir(intersection->p);
+		  colour+=l->colour*
+			(m->diffuse*glm::max(0.f,glm::dot(intersection->n,ld))
+			 +m->specular*glm::pow(glm::max(0.f,glm::dot(intersection->n,glm::normalize(ld+v))),m->hardness));
+		}
+	  }
 			
 	  // TODO: 3. compute the shaded result for the intersection point
 	  

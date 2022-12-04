@@ -11,7 +11,7 @@
 A sphere class. It is specified with a radius and a center position.
 - By Loïc Nassif
  */
-class Sphere : public Shape{
+class Sphere:public Shape{
 public:
 	Sphere();
 	Sphere(float _radius,glm::vec3 _center);

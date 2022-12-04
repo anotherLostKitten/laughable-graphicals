@@ -26,14 +26,11 @@ public:
   virtual~IntersectionData() {}
 
   void reset(){
-	n=glm::vec3(0.0f,0.0f,0.0f);
-	p=glm::vec3(0.0f,0.0f,0.0f);
 	t=FLT_MAX;
-	material.reset();
   }
 
-  glm::vec3 n=glm::vec3(0.0f,0.0f,0.0f); // Intersection normal
-  glm::vec3 p=glm::vec3(0.0f,0.0f,0.0f); // Intersection point
+  glm::vec3 n; // Intersection normal
+  glm::vec3 p; // Intersection point
   float t=FLT_MAX; // Ray parameter giving the position of intersection
 
   std::shared_ptr<Material>material;

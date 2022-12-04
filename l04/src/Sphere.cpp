@@ -19,7 +19,6 @@ Sphere::~Sphere(){
 }
 
 void Sphere::intersect(const std::shared_ptr<Ray>ray,std::shared_ptr<IntersectionData>intersection){
-  // TODO: Objective 2: intersection of ray with sphere
   glm::vec3 d=ray->direction,e=ray->origin;
 
   float a=glm::dot(d,d),b=glm::dot(d,e-center),c=glm::dot(e-center,e-center)-radius*radius;
@@ -34,12 +33,16 @@ void Sphere::intersect(const std::shared_ptr<Ray>ray,std::shared_ptr<Intersectio
   if(t0>=0){
 	if(t0<intersection->t){
 	  intersection->t=t0;
-	  // TODO 3 set normal, intersection point
+	  ray->computePoint(t0,intersection->p);
+	  intersection->n=(intersection->p-center)/radius;
+	  intersection->material=materials[0];
 	}
   }else{
 	if(t1>=0&&t1<intersection->t){
 	  intersection->t=t1;
-	  // TODO 3 same
+	  ray->computePoint(t1,intersection->p);
+	  intersection->n=(intersection->p-center)/radius;
+	  intersection->material=materials[0];
 	}
   }
 }
