@@ -80,7 +80,7 @@ void Scene::renderThr(int thrdn){
 		//std::cout<<"ray dir: "<<ray->direction.x<<", "<<ray->direction.y<<", "<<ray->direction.z<<"\n";
 	  
 		for(auto s:shapes){
-		  s->intersect(ray,intersection,false);
+		  s->intersect(ray,intersection,false,thrdn);
 		}
 
 		if(intersection->t<FLT_MAX){
@@ -93,7 +93,7 @@ void Scene::renderThr(int thrdn){
 			shadowIntersection->reset();
 			shadowRay->direction=ld;
 			for(auto s:shapes){
-			  s->intersect(shadowRay,shadowIntersection,true);
+			  s->intersect(shadowRay,shadowIntersection,true,thrdn);
 			  if(shadowIntersection->t<FLT_MAX)break;
 			}
 			if(shadowIntersection->t<FLT_MAX)continue;
@@ -111,7 +111,7 @@ void Scene::renderThr(int thrdn){
 			
 			intersection->reset();
 			for(auto s:shapes){
-			  s->intersect(ray,intersection,false);
+			  s->intersect(ray,intersection,false,thrdn);
 			}
 			
 			if(intersection->t<FLT_MAX){
@@ -123,7 +123,7 @@ void Scene::renderThr(int thrdn){
 				shadowIntersection->reset();
 				shadowRay->direction=ld;
 				for(auto s:shapes){
-				  s->intersect(shadowRay,shadowIntersection,true);
+				  s->intersect(shadowRay,shadowIntersection,true,thrdn);
 				  if(shadowIntersection->t<FLT_MAX)break;
 				}
 				if(shadowIntersection->t<FLT_MAX)continue;

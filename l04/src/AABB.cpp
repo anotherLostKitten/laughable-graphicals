@@ -23,7 +23,7 @@ AABB::AABB(glm::vec3 size,glm::vec3 position){
 AABB::~AABB(){
 }
 
-void AABB::intersect(const std::shared_ptr<Ray>ray,std::shared_ptr<IntersectionData>intersection,bool shad){
+void AABB::intersect(const std::shared_ptr<Ray>ray,std::shared_ptr<IntersectionData>intersection,bool shad,int thrd){
   glm::vec3 d=ray->direction,e=ray->origin;
   float tx0=t_min,tx1=t_max,ty0=t_min,ty1=t_max,tz0=t_min,tz1=t_max;
   //std::cout<<"testing intersecting ray "<<glm::to_string(e)<<"+"<<glm::to_string(d)<<"*t\n  with AABB "<<glm::to_string(minpt)<<glm::to_string(maxpt)<<"\n";

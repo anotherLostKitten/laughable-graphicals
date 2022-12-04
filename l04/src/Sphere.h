@@ -19,7 +19,7 @@ public:
 
 	virtual~Sphere();
 
-  void intersect(const std::shared_ptr<Ray>ray,std::shared_ptr<IntersectionData> intersection,bool shad);
+  void intersect(const std::shared_ptr<Ray>ray,std::shared_ptr<IntersectionData> intersection,bool shad,int thrd);
 
 	float radius;
 	glm::vec3 center;

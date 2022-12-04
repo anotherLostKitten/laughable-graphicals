@@ -18,7 +18,7 @@ Plane::Plane(glm::vec3 _normal):normal(_normal),position(0.0f,0.0f,0.0f){
 Plane::~Plane(){
 }
 
-void Plane::intersect(const std::shared_ptr<Ray>ray,std::shared_ptr<IntersectionData>intersection,bool shad){
+void Plane::intersect(const std::shared_ptr<Ray>ray,std::shared_ptr<IntersectionData>intersection,bool shad,int thrd){
   glm::vec3 d=ray->direction,e=ray->origin;
   float dnm=glm::dot(d,normal);
   if(dnm==0.f)return;

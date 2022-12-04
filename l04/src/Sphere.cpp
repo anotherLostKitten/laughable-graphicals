@@ -18,7 +18,7 @@ Sphere::Sphere(float _radius):radius(_radius),center(glm::vec3(0.0f, 0.0f, 0.0f)
 Sphere::~Sphere(){
 }
 
-void Sphere::intersect(const std::shared_ptr<Ray>ray,std::shared_ptr<IntersectionData>intersection,bool shad){
+void Sphere::intersect(const std::shared_ptr<Ray>ray,std::shared_ptr<IntersectionData>intersection,bool shad,int thrd){
   glm::vec3 d=ray->direction,e=ray->origin;
   float a=glm::dot(d,d),b=glm::dot(d,e-center),c=glm::dot(e-center,e-center)-radius*radius;
   float dsc=b*b-a*c;

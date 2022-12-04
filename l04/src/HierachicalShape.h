@@ -4,10 +4,11 @@
 #ifndef HIERACHICALSHAPE_H
 #define HIERACHICALSHAPE_H
 
-#include "Shape.h"
-#include "Material.h"
+#include"Shape.h"
+#include"Material.h"
+#include"Scene.h"
 
-#include <vector>
+#include<vector>
 #include<string>
 
 /**
@@ -29,7 +30,7 @@ public:
 
   virtual~HierachicalShape();
 
-  void intersect(const std::shared_ptr<Ray>ray,std::shared_ptr<IntersectionData>intersection,bool shad);
+  void intersect(const std::shared_ptr<Ray>ray,std::shared_ptr<IntersectionData>intersection,bool shad,int thrd);
   void print(std::string str);
   
   std::vector<std::shared_ptr<Material>>materials;
@@ -39,8 +40,8 @@ public:
   glm::mat4 Minv; // Matrix transform inverse
 
 private:
-  std::shared_ptr<Ray>transformRay;
-  std::shared_ptr<IntersectionData>transformData;
+  std::shared_ptr<Ray>transformRay[RENDER_THREADS];
+  std::shared_ptr<IntersectionData>transformData[RENDER_THREADS];
 };
 
 #endif

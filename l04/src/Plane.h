@@ -20,7 +20,7 @@ public:
 
   virtual ~Plane();
 
-  void intersect(const std::shared_ptr<Ray>ray,std::shared_ptr<IntersectionData>intersection,bool shad);
+  void intersect(const std::shared_ptr<Ray>ray,std::shared_ptr<IntersectionData>intersection,bool shad,int thrd);
 
   glm::vec3 normal;
   glm::vec3 position;

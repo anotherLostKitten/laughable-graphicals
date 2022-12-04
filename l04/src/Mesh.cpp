@@ -96,8 +96,7 @@ void Mesh::loadOBJ(const std::string&meshName){
   faceCount=int(posBuf.size()/9.0f);
 }
 
-void Mesh::intersect(const std::shared_ptr<Ray>ray,std::shared_ptr<IntersectionData>intersection,bool shad){
-  // TODO 9: Do triangle mesh intersection here
+void Mesh::intersect(const std::shared_ptr<Ray>ray,std::shared_ptr<IntersectionData>intersection,bool shad,int thrd){
   // TODO some volume hierarchy
   for(int ii=0,jj=0;ii<faceCount;++ii&&(jj+=9)){
 	float a=posBuf[jj]-posBuf[jj+3],d=posBuf[jj]-posBuf[jj+6],g=ray->direction.x,j=posBuf[jj]-ray->origin.x,

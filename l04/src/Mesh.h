@@ -24,7 +24,7 @@ public:
   virtual~Mesh();
   void loadOBJ(const std::string&meshName);
 	
-  void intersect(const std::shared_ptr<Ray>ray,std::shared_ptr<IntersectionData>intersection,bool shad);
+  void intersect(const std::shared_ptr<Ray>ray,std::shared_ptr<IntersectionData>intersection,bool shad,int thrd);
 
   void translate(glm::vec3 position);
 
