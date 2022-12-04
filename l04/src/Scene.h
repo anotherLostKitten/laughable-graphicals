@@ -30,11 +30,10 @@ This class handles the scene.
 This is where iterating over all the pixels happen (aka the render loop).
 - By Lo�c Nassif
 */
-class Scene
-{
+class Scene{
 public:
 	Scene(const std::string SCENE_PATH);
-	virtual ~Scene();
+	virtual~Scene();
 
 	// Init scene parameters
 	void init();
@@ -43,40 +42,38 @@ public:
 	void render();
 
 	// Add object
-	void addObject(shared_ptr<Shape> shape);
+	void addObject(shared_ptr<Shape>shape);
 
 	// Add light
-	void addLight(shared_ptr<Light> light);
+	void addLight(shared_ptr<Light>light);
 
 	// Width and height of image
-	int width, height;
+	int width,height;
 
 	//aspect ratio
 	float aspect;
 
 	//the scene's camera
-	shared_ptr<Camera> cam;
+	shared_ptr<Camera>cam;
 
 	// Ambient lighting of the scene
 	glm::vec3 ambient;
 
 	// jitter samples (to help with antialiasing)
-	bool jitter = false;
+	bool jitter=false;
 
 	// Sample count for AA
-	int samples = 1;
+	int samples=1;
 
 	// The scene's objects
-	std::vector<shared_ptr<Shape>> shapes;
+	std::vector<shared_ptr<Shape>>shapes;
 
 private:
-	float shininess;
-
 	// The scene's lights
-	std::vector<shared_ptr<Light>> lights;
+	std::vector<shared_ptr<Light>>lights;
 
 	// The scene's image
-	shared_ptr<Image> image;
+	shared_ptr<Image>image;
 
 	// Scene output filename (should end in .png)
 	std::string outputFilename;

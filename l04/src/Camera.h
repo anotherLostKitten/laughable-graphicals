@@ -20,20 +20,19 @@
  * By Alexandre Mercier-Aubin
  * Modified by Lo�c Nassif
  */
-class Camera
-{
+class Camera{
 public:
-	Camera() : fovy(45.0f) {};
-	virtual ~Camera() {};
+	Camera():fovy(45.0f){};
+	virtual~Camera(){};
 
 	//position of the camera in the world
-	glm::vec3 position = glm::vec3(0, 0, -10);
+	glm::vec3 position=glm::vec3(0,0,-10);
 
 	//where the camera is pointing at
-	glm::vec3 lookAt = glm::vec3(0, 0, 1);
+	glm::vec3 lookAt=glm::vec3(0,0,1);
 
 	//a vector that stores in which direction the sky is.
-	glm::vec3 up = glm::vec3(0, 1, 0);
+	glm::vec3 up=glm::vec3(0,1,0);
 
 	float fovy;
 };

@@ -18,28 +18,25 @@
  * Convenient class to hold information of the closest intersection for a given ray. 
  * By Loïc Nassif
  */
-class IntersectionData
-{
+class IntersectionData{
 public:
-	IntersectionData() 
-	{
-		material = std::make_shared<Material>();
-	}
-	virtual ~IntersectionData() {}
+  IntersectionData(){
+	material=std::make_shared<Material>();
+  }
+  virtual~IntersectionData() {}
 
-	void reset()
-	{
-		n = glm::vec3(0.0f, 0.0f, 0.0f);
-		p = glm::vec3(0.0f, 0.0f, 0.0f);
-		t = FLT_MAX;
-		material.reset();
-	}
+  void reset(){
+	n=glm::vec3(0.0f,0.0f,0.0f);
+	p=glm::vec3(0.0f,0.0f,0.0f);
+	t=FLT_MAX;
+	material.reset();
+  }
 
-	glm::vec3 n = glm::vec3(0.0f, 0.0f, 0.0f); // Intersection normal
-	glm::vec3 p = glm::vec3(0.0f, 0.0f, 0.0f); // Intersection point
-	float t = FLT_MAX; // Ray parameter giving the position of intersection
+  glm::vec3 n=glm::vec3(0.0f,0.0f,0.0f); // Intersection normal
+  glm::vec3 p=glm::vec3(0.0f,0.0f,0.0f); // Intersection point
+  float t=FLT_MAX; // Ray parameter giving the position of intersection
 
-	std::shared_ptr<Material> material;
+  std::shared_ptr<Material>material;
 };
 
 #endif
