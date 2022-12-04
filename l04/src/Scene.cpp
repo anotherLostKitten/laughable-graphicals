@@ -50,7 +50,7 @@ void Scene::renderSetup(){
   u=glm::normalize(glm::cross(cam->up,w));
   v=glm::cross(w,u);
 
-  for(auto s:shapes)s->print("|");
+  //for(auto s:shapes)s->print("|");
 }
 
 void Scene::renderThr(int thrdn){
