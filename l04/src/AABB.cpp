@@ -25,43 +25,28 @@ AABB::~AABB(){
 
 void AABB::intersect(const std::shared_ptr<Ray>ray,std::shared_ptr<IntersectionData>intersection,bool shad,int thrd){
   glm::vec3 d=ray->direction,e=ray->origin;
-  float tx0=t_min,tx1=t_max,ty0=t_min,ty1=t_max,tz0=t_min,tz1=t_max;
+  float tx0,tx1,ty0,ty1,tz0,tz1;
   //std::cout<<"testing intersecting ray "<<glm::to_string(e)<<"+"<<glm::to_string(d)<<"*t\n  with AABB "<<glm::to_string(minpt)<<glm::to_string(maxpt)<<"\n";
-  if(d.x!=0.f){
-	tx0=(minpt.x-e.x)/d.x;
-	tx1=(maxpt.x-e.x)/d.x;
-	if(tx0>tx1){
-	  float tmp=tx0;
-	  tx0=tx1;
-	  tx1=tmp;
-	}
-  }else if(e.x<minpt.x||e.x>maxpt.x){
-	//std::cout<<"parallel x\n";
-	return;
+  tx0=(minpt.x-e.x)/d.x;
+  tx1=(maxpt.x-e.x)/d.x;
+  ty0=(minpt.y-e.y)/d.y;
+  ty1=(maxpt.y-e.y)/d.y;
+  tz0=(minpt.z-e.z)/d.z;
+  tz1=(maxpt.z-e.z)/d.z;
+  if(ty0>ty1){
+	float tmp=ty0;
+	ty0=ty1;
+	ty1=tmp;
   }
-  if(d.y!=0.f){
-	ty0=(minpt.y-e.y)/d.y;
-	ty1=(maxpt.y-e.y)/d.y;
-	if(ty0>ty1){
-	  float tmp=ty0;
-	  ty0=ty1;
-	  ty1=tmp;
-	}
-  }else if(e.y<minpt.y||e.y>maxpt.y){
-	//std::cout<<"parallel y\n";
-	return;
+  if(tx0>tx1){
+	float tmp=tx0;
+	tx0=tx1;
+	tx1=tmp;
   }
-  if(d.z!=0.f){
-	tz0=(minpt.z-e.z)/d.z;
-	tz1=(maxpt.z-e.z)/d.z;
-	if(tz0>tz1){
-	  float tmp=tz0;
-	  tz0=tz1;
-	  tz1=tmp;
-	}
-  }else if(e.z<minpt.z||e.z>maxpt.z){
-	//std::cout<<"parallel z\n";
-	return;
+  if(tz0>tz1){
+	float tmp=tz0;
+	tz0=tz1;
+	tz1=tmp;
   }
 
   //std::cout<<"tx: "<<tx0<<", "<<tx1<<"\n";
@@ -91,7 +76,6 @@ void AABB::intersect(const std::shared_ptr<Ray>ray,std::shared_ptr<IntersectionD
   
   
   if(tmax<tmin){
-	//std::cout<<"does not intersect AABB\n";
 	return;
   }
   //std::cout<<"hit\n";
@@ -102,5 +86,4 @@ void AABB::intersect(const std::shared_ptr<Ray>ray,std::shared_ptr<IntersectionD
 	intersection->n=glm::dot(nrml,d)<0.f?nrml:-1.f*nrml;//idk to intersect both sides?
 	intersection->material=materials[0];
   }
-
 }

@@ -9,6 +9,7 @@
 
 #include "Shape.h"
 #include "Material.h"
+#include "HBV.h"
 
 /**
  * A shape defined by a list of triangles
@@ -36,8 +37,17 @@ private:
   std::vector<float> posBuf;
   std::vector<float> norBuf;
   std::vector<float> texBuf;
-
+  
+  std::shared_ptr<HBV>hbv;
+  
   int faceCount=0;
+
+  void swap(int i,int j);
+  int partition(int s,int e,int axis,float piv);
+
+  void genHBV(int s,int e,int axis,std::shared_ptr<HBV>root);
+
+  void intrec(const std::shared_ptr<Ray>ray,std::shared_ptr<IntersectionData>inter,bool shad,int t,std::shared_ptr<HBV>root);
 };
 
 #endif

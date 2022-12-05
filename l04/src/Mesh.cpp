@@ -93,22 +93,115 @@ void Mesh::loadOBJ(const std::string&meshName){
 	  }
 	}
   }
-  faceCount=int(posBuf.size()/9.0f);
+  faceCount=posBuf.size()/9;
+  std::cout<<"Building HBV for "<<name<<" "<<type<<"...\n";
+  hbv=std::make_shared<HBV>();
+  genHBV(0,faceCount,0,hbv);
+  std::cout<<"Done\n";
+  //hbv->print("");
+}
+
+void Mesh::swap(int i,int j){
+  for(int k=0;k<9;k++){
+	float tmp=posBuf[i*9+k];
+    posBuf[i*9+k]=posBuf[j*9+k];
+	posBuf[j*9+k]=tmp;
+  }
+  if(norBuf.size()){
+	for(int k=0;k<9;k++){
+	  float tmp=posBuf[i*9+k];
+	  posBuf[i*9+k]=posBuf[j*9+k];
+	  posBuf[j*9+k]=tmp;
+	}
+  }
+  if(texBuf.size()){
+	for(int k=0;k<6;k++){
+	  float tmp=posBuf[i*6+k];
+	  posBuf[i*6+k]=posBuf[j*6+k];
+	  posBuf[j*6+k]=tmp;
+	}
+  }
+}
+
+int Mesh::partition(int s,int e,int axis,float piv){
+  e--;
+  if(s>=e)return s;
+  while(true){
+	while(glm::max(glm::max(posBuf[s*9+axis],posBuf[s*9+axis+3]),posBuf[s*9+axis+6])<=piv&&s<e)
+	  s++;
+	while(glm::min(glm::min(posBuf[s*9+axis],posBuf[s*9+axis+3]),posBuf[s*9+axis+6])>piv&&s<e)
+	  e--;
+	if(s>=e)
+	  return s;
+	swap(s,e);
+	s++;
+	e--;
+  }
+}
+
+void Mesh::genHBV(int s,int e,int axis,std::shared_ptr<HBV>root){
+  if(s+1==e){
+	root->facepos=s;
+	root->left=NULL;
+	root->right=NULL;
+	root->minpt=glm::vec3(glm::min(glm::min(posBuf[s*9],posBuf[s*9+3]),posBuf[s*9+6]),
+						 glm::min(glm::min(posBuf[s*9+1],posBuf[s*9+4]),posBuf[s*9+7]),
+						 glm::min(glm::min(posBuf[s*9+2],posBuf[s*9+5]),posBuf[s*9+8]));
+	root->maxpt=glm::vec3(glm::max(glm::max(posBuf[s*9],posBuf[s*9+3]),posBuf[s*9+6]),
+						 glm::max(glm::max(posBuf[s*9+1],posBuf[s*9+4]),posBuf[s*9+7]),
+						 glm::max(glm::max(posBuf[s*9+2],posBuf[s*9+5]),posBuf[s*9+8]));
+  }else{
+	root->facepos=-1;
+	root->right=std::make_shared<HBV>();
+	root->left=std::make_shared<HBV>();
+	if(s+2==e){
+	  genHBV(s,s+1,axis,root->right);
+	  genHBV(s+1,e,axis,root->left);
+	}else{
+	  float max=FLT_MIN,min=FLT_MAX,tmp;
+	  for(int i=s;i<e;i++){
+		tmp=glm::min(glm::min(posBuf[s*9+axis],posBuf[s*9+axis+3]),posBuf[s*9+axis+6]);
+		if(tmp<min)
+		  min=tmp;
+		tmp=glm::max(glm::max(posBuf[s*9+axis],posBuf[s*9+axis+3]),posBuf[s*9+axis+6]);
+		if(tmp>max)
+		  max=tmp;
+	  }
+	  int part=partition(s,e,axis,(max+min)/2.f);
+	  genHBV(s,part,(axis+1)%3,root->right);
+	  genHBV(part,e,(axis+1)%3,root->left);
+	}
+	root->minpt=glm::vec3(glm::min(root->right->minpt.x,root->left->minpt.x),
+						  glm::min(root->right->minpt.y,root->left->minpt.y),
+						  glm::min(root->right->minpt.z,root->left->minpt.z));
+	root->maxpt=glm::vec3(glm::max(root->right->maxpt.x,root->left->maxpt.x),
+						  glm::max(root->right->maxpt.y,root->left->maxpt.y),
+						  glm::max(root->right->maxpt.z,root->left->maxpt.z));
+  }
 }
 
 void Mesh::intersect(const std::shared_ptr<Ray>ray,std::shared_ptr<IntersectionData>intersection,bool shad,int thrd){
-  // TODO some volume hierarchy
-  for(int ii=0,jj=0;ii<faceCount;++ii&&(jj+=9)){
+  intrec(ray,intersection,shad,thrd,hbv);
+}
+void Mesh::intrec(const std::shared_ptr<Ray>ray,std::shared_ptr<IntersectionData>intersection,bool shad,int thrd,std::shared_ptr<HBV>root){
+  if(root->facepos<0){
+	if(root->intersect(ray,MESH_EPSILON,intersection->t)){
+	  intrec(ray,intersection,shad,thrd,root->left);
+	  intrec(ray,intersection,shad,thrd,root->right);
+	}
+  }else{
+	int ii=root->facepos;
+	int jj=ii*9;
 	float a=posBuf[jj]-posBuf[jj+3],d=posBuf[jj]-posBuf[jj+6],g=ray->direction.x,j=posBuf[jj]-ray->origin.x,
 	  b=posBuf[jj+1]-posBuf[jj+4],e=posBuf[jj+1]-posBuf[jj+7],h=ray->direction.y,k=posBuf[jj+1]-ray->origin.y,
 	  c=posBuf[jj+2]-posBuf[jj+5],f=posBuf[jj+2]-posBuf[jj+8],i=ray->direction.z,l=posBuf[jj+2]-ray->origin.z;
 	float eihf=e*i-h*f,gfdi=g*f-d*i,dheg=d*h-e*g;
 	float invd=1/(a*eihf+b*gfdi+c*dheg);
 	float beta=(j*eihf+k*gfdi+l*dheg)*invd;
-	if(beta<0.f||beta>1.f)continue;
+	if(beta<0.f||beta>1.f)return;
 	float akjb=a*k-j*b,jcal=j*c-a*l,blkc=b*l-k*c;
 	float gamma=(i*akjb+h*jcal+g*blkc)*invd;
-	if(gamma<0.f||gamma>1.f-beta)continue;
+	if(gamma<0.f||gamma>1.f-beta)return;
 	float t=-(f*akjb+e*jcal+d*blkc)*invd;
 	if(t>=MESH_EPSILON&&t<intersection->t){
 	  intersection->t=t;
@@ -116,22 +209,7 @@ void Mesh::intersect(const std::shared_ptr<Ray>ray,std::shared_ptr<IntersectionD
 	  ray->computePoint(t,intersection->p);
 	  intersection->n=glm::normalize(glm::vec3(b*f-c*e,c*d-a*f,a*e-b*d));
 	  intersection->material=materials[0];
-	  }
-	  
-	  // v1
-	  //a.x posBuf[j]
-	  //a.y posBuf[j+1]
-	  //a.z posBuf[j+2]
-
-	  // v2
-	  //b.x posBuf[j+3]
-	  //b.y posBuf[j+4]
-	  //b.z posBuf[j+5]
-	  
-	  // v3
-	  //c.x posBuf[j+6]
-	  //c.y posBuf[j+7]
-	  //c.z posBuf[j+8]
+	}
   }
   
 }
