@@ -72,6 +72,10 @@ public:
   
   // The scene's objects
   std::vector<shared_ptr<Shape>>shapes;
+
+  std::vector<glm::vec3>envmap;
+
+  int envw=-1,envh=-1;
   
 private:
   // The scene's lights

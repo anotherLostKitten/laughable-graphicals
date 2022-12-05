@@ -1,0 +1,79 @@
+{
+  "resolution": [256, 256],
+  "AA": { "jitter": false, "samples": 1 },
+  "ambient": [0.0, 0.0, 0.0],
+  "camera": {
+    "position": [-5, 1.5, 0.5],
+    "lookAt": [0.1, 1.0, 0],
+    "up": [0.0, 1.0, 0.0],
+    "fov": 45.0
+  },
+  "enviornment": "../resources/enviornment.ppm",
+  "materials": [
+    {
+      "name": "ground0", "ID": 0, 
+      "diffuse": [0.1, 0.1, 0.1], "specular": [0.1, 0.1, 0.1], "mirror": [0.2, 0.2, 0.2],
+      "hardness": 16
+    },
+    {
+      "name": "ground1", "ID": 1, 
+      "diffuse": [0.0, 0.0, 0.0], "specular": [0.1, 0.1, 0.1], "mirror": [0.2, 0.2, 0.2],
+      "hardness": 16
+    },
+    {
+      "name": "dragon", "ID": 2, 
+      "diffuse": [0.0, 0.8, 0.4], "specular": [0.5, 0.5, 0.5],
+      "hardness": 16
+    },
+	{
+      "name": "sphere", "ID": 3, 
+      "diffuse": [0.7, 0.0, 0.0], "specular": [0.5, 0.5, 0.5], "mirror": [0.6, 0.6, 0.6],
+      "hardness": 50
+    }
+
+  ],    
+  "objects": [
+    {
+      "name": "plane", "type": "plane",
+      "normal": [0.0, 1.0, 0.0], "position": [0.0, -0.5, 0.0],
+      "materials": [1, 0]
+    },
+    {
+      "name": "dragon", "type": "mesh",
+      "filepath": "../resources/objs/dragon.obj",
+      "scale": 3.0, "position": [0.0, 0.0, 1.0],
+      "materials": [2]
+    },
+	{
+      "name": "sphere0",
+      "type": "sphere",
+      "radius": 2.0,
+      "position": [2.0, 0.5, -1.8],
+      "materials": [3]
+    }
+
+  ],
+  "lights": [
+    {
+      "name": "light1",
+      "type": "point",
+      "position": [-3.0, 10.0, 1.0],
+      "colour": [1.0, 1.0, 1.0],
+      "power": 0.5
+    },
+    {
+      "name": "light2",
+      "type": "point",
+      "position": [3.0, 10.0, 1.0],
+      "colour": [1.0, 1.0, 1.0],
+      "power": 0.5
+    },
+    {
+      "name": "light3",
+      "type": "point",
+      "position": [0.0, -5.0, 0.0],
+      "colour": [1.0, 1.0, 1.0],
+      "power": 10.0
+    }
+  ]
+}

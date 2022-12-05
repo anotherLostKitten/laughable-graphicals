@@ -236,6 +236,34 @@ void Parser::createScene(std::shared_ptr<Scene> scene){
 	  scene->init();
 	}
 
+	try{
+	  std::string enviornment=data["enviornment"];
+	  FILE *read=fopen(enviornment.c_str(),"rb");
+	  unsigned char head[16];
+	  fread(head,16,1,read);
+	  int w=0,h=0,mc=0,i=3;
+	  for(;head[i]!='\n'&&head[i]!=' ';i++)
+		w=w*10+(head[i]-'0');
+	  for(i++;head[i]!='\n'&&head[i]!=' ';i++)
+		h=h*10+(head[i]-'0');
+	  for(i++;head[i]!='\n'&&head[i]!=' ';i++)
+		mc=mc*10+(head[i]-'0');
+	  unsigned char*img=new unsigned char[w*h*3];
+	  fread(img,w*h*3,1,read);
+
+	  for(i=0;i<w*h*3;i+=3){
+		scene->envmap.push_back(glm::vec3((float)img[i]/(float)mc,(float)img[i+1]/(float)mc,(float)img[i+2]/(float)mc));
+	  }
+	  scene->envw=w;
+	  scene->envh=h;
+	  
+	  delete[]img;
+
+	  std::cout<<"Loaded image of size "<<w<<"x"<<h<<", max color "<<mc<<"\n";
+	}catch(...){
+	  std::cerr<<"No enviornment map found\n";
+	}
+
 	// Add the ambient light to the scene
 	glm::vec3 ambient = glm::vec3();
 	populateVectorHelper(ambient, "ambient", data);
@@ -342,10 +370,8 @@ void Parser::createScene(std::shared_ptr<Scene> scene){
 
 		float s = obj["scale"];
 
-		std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>(filepath, objPosition);
+		std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>(filepath,objPosition,s);
 		mesh->name = objName;
-
-		mesh->scale(s);
 
 		pairMaterialwithObj(mesh, materials, materialIDs);
 

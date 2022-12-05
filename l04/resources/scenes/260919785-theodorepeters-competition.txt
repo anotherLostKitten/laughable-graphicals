@@ -1,0 +1,6 @@
+"Woah it is the dragon from assignment 3"
+
+It is the dragon for assignment 3
+
+Uhh so this demonstrates fresnel reflections, multithreading, BVH, and enviornment map
+I probably should have used a higher resolution enviornment map but instead I did not do that

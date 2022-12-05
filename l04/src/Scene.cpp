@@ -10,6 +10,8 @@
 #include <stdlib.h>
 #include<iostream>
 #include<random>
+#include<glm/gtx/string_cast.hpp>
+
 
 float SHADOW_EPSILON=1e-6; // To prevent shadow acne
 
@@ -104,7 +106,7 @@ void Scene::renderThr(int thrdn){
 		  if(m->mirror.r>0.f||m->mirror.g>0.f||m->mirror.b>0.f){
 			float cos=glm::dot(intersection->n,v);
 			float coeff=glm::pow(1.f-cos,5);
-			glm::vec3 colourref=glm::vec3(0.f,0.f,0.f),fres=m->mirror*(1.f-coeff)+coeff;
+			glm::vec3 colourref=glm::vec3(0.f,0.f,0.f),fres=(m->mirror*(1.f-coeff)+coeff)*m->mirror;
 			
 			ray->origin=intersection->p;
 			ray->direction=2.f*cos*intersection->n-v;
@@ -132,6 +134,13 @@ void Scene::renderThr(int thrdn){
 				   +m->specular*glm::pow(glm::max(0.f,glm::dot(intersection->n,glm::normalize(ld+v))),m->hardness));
 			  }
 			  colour+=colourref*fres;
+			}else if(envw>0&&envh>0){
+			  
+			  glm::vec3 v=glm::normalize(ray->direction);
+			  float phi=glm::acos(v.y),theta=glm::atan(v.x,v.z)+3.1415926535;
+			  int i=int(theta/2./3.1415926535*(float)envw);
+			  int j=int(phi/3.1415926535*(float)envh);
+			  colour+=fres*envmap[j*envw+i]/(float)(samples*samples);
 			}
 			
 		  }
@@ -139,6 +148,13 @@ void Scene::renderThr(int thrdn){
 		  colour.g=glm::min(1.0f,colour.g);
 		  colour.b=glm::min(1.0f,colour.b);
 		  pixel+=colour/(float)(samples*samples);
+		}else if(envw>0&&envh>0){
+		  
+		  glm::vec3 v=glm::normalize(ray->direction);
+		  float phi=glm::acos(v.y),theta=glm::atan(v.x,v.z)+3.1415926535;
+		  int i=int(theta/2./3.1415926535*(float)envw);
+		  int j=int(phi/3.1415926535*(float)envh);
+		  pixel+=envmap[j*envw+i]/(float)(samples*samples);
 		}
 	  }
 	  // Write pixel colour to image

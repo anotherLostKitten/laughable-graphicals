@@ -20,7 +20,7 @@
 class Mesh:public Shape{
 public:
   Mesh(const std::string&meshName);
-  Mesh(const std::string&meshName,glm::vec3 position);
+  Mesh(const std::string&meshName,glm::vec3 position,float scale);
 
   virtual~Mesh();
   void loadOBJ(const std::string&meshName);

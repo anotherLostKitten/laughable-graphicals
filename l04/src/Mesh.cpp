@@ -15,9 +15,15 @@ Mesh::Mesh(const std::string&meshName):filepath(meshName){
   loadOBJ(meshName);
 }
 
-Mesh::Mesh(const std::string&meshName,glm::vec3 position):filepath(meshName){
+Mesh::Mesh(const std::string&meshName,glm::vec3 position,float s):filepath(meshName){
   loadOBJ(meshName);
+  scale(s);
   translate(position);
+  std::cout<<"Building HBV for "<<name<<" "<<type<<"...\n";
+  hbv=std::make_shared<HBV>();
+  genHBV(0,faceCount,0,hbv);
+  std::cout<<"Done\n";
+
 }
 
 Mesh::~Mesh(){
@@ -94,10 +100,6 @@ void Mesh::loadOBJ(const std::string&meshName){
 	}
   }
   faceCount=posBuf.size()/9;
-  std::cout<<"Building HBV for "<<name<<" "<<type<<"...\n";
-  hbv=std::make_shared<HBV>();
-  genHBV(0,faceCount,0,hbv);
-  std::cout<<"Done\n";
   //hbv->print("");
 }
 
