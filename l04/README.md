@@ -1,5 +1,7 @@
 ## 260919785-theodorepeters-competition.png
 
+![260919785-theodorepeters-competition](https://user-images.githubusercontent.com/25112030/213032474-b9c3bd5e-9071-4d9c-bd57-85adabd5453e.png)
+
 Novel scene for competition submission -- for the competition I upscaled it to 1024x1024 which took some like 15 minutes (I took a shower and when I returned it was done) to render so I would not recommend doing that
 
 Right now the json file is at 256x256 which took about ~60 seconds to run in release mode on my machine
